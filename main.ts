@@ -1,6 +1,6 @@
 // @deno-types="npm:@types/express@5.0.0"
 import express from "npm:express@4.21.2";
-import "jsr:@std/dotenv/load";
+import "@std/dotenv/load";
 
 const app = express();
 
