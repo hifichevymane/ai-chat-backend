@@ -1,8 +1,8 @@
 {
   "tasks": {
-    "dev": "lms server start && deno run --env-file --allow-net --allow-read --allow-env --watch main.ts",
+    "dev": "lms server start && deno run --env-file --allow-net --allow-read --allow-env --watch server.ts",
     "stop": "lms server stop && lms unload --all",
-    "start": "lms server start && deno run --env-file --allow-net --allow-read --allow-env main.ts"
+    "start": "lms server start && deno run --env-file --allow-net --allow-read --allow-env server.ts"
   },
   "imports": {
     "@openai/openai": "jsr:@openai/openai@^4.83.0",

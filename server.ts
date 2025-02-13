@@ -1,5 +1,6 @@
 // @deno-types="npm:@types/express@5.0.0"
 import express from "npm:express@4.21.2";
+import { Request, Response } from "npm:express@4.21.2";
 import "@std/dotenv/load";
 import OpenAI from "@openai/openai";
 
@@ -17,11 +18,27 @@ const client = new OpenAI({
   baseURL: LLM_BASE_URL
 })
 
-app.get('/health-check', (_, res) => {
+app.get('/health-check', (_, res: Response) => {
   res.json({ code: 200, status: 'OK' });
 });
 
-app.post('/chat', async (req, res) => {
+type EmptyObject = Record<string | number | symbol, never>;
+
+interface ChatRequestBody {
+  prompt: string
+}
+
+interface ChatResponseBody {
+  message: string | null;
+}
+
+interface ErrorResponseBody {
+  error: string;
+}
+
+type ChatRequest = Request<EmptyObject, ChatResponseBody | ErrorResponseBody, ChatRequestBody>;
+
+app.post('/chat', async (req: ChatRequest, res: Response) => {
   try {
     const { prompt } = req.body;
 
