@@ -3,6 +3,9 @@ import express from "npm:express@4.21.2";
 import { Response } from "npm:express@4.21.2";
 // @deno-types="npm:@types/cors@2.8.17"
 import cors from "npm:cors@2.8.5";
+// @deno-types="npm:@types/morgan@1.9.9"
+import morgan from "npm:morgan@1.10.0"
+
 import "@std/dotenv/load";
 import routes from "./routes/index.ts";
 
@@ -16,6 +19,7 @@ const corsOptions: cors.CorsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(morgan('dev'));
 app.use('/api/v1', routes);
 
 app.get('/api/v1/health-check', (_, res: Response) => {
