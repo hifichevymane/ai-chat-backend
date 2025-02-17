@@ -9,15 +9,11 @@ const logger = (req: Request, res: Response, next: NextFunction) => {
     const timestamp = new Date().toISOString();
 
     let logLevel = 'info';
-    let log = console.log;
+    let log = console.info;
     let logColor = 'green';
 
     const { statusCode } = res;
-    if (statusCode >= 400 && statusCode < 500) {
-      logLevel = 'warn';
-      log = console.warn;
-      logColor = 'yellow';
-    } else if (statusCode >= 500) {
+    if (statusCode >= 400 && statusCode <= 599) {
       logLevel = 'error';
       log = console.error;
       logColor = 'red';
