@@ -1,5 +1,5 @@
-// @deno-types="npm:@types/express@5.0.0"
-import { Router, Request, Response } from "npm:express@4.21.2";
+// @deno-types="@types/express"
+import { Router, Request, Response } from "express";
 import "@std/dotenv/load";
 import OpenAI from "@openai/openai";
 
