@@ -1,8 +1,8 @@
-// @deno-types="npm:@types/express@5.0.0"
-import express from "npm:express@4.21.2";
-import { Response } from "npm:express@4.21.2";
-// @deno-types="npm:@types/cors@2.8.17"
-import cors from "npm:cors@2.8.5";
+// @deno-types="@types/express"
+import express from "express";
+import { Response } from "express";
+// @deno-types="@types/cors"
+import cors from "cors";
 import logger from "./logger.ts";
 
 import "@std/dotenv/load";

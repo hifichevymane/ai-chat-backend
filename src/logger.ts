@@ -1,5 +1,5 @@
-// @deno-types="npm:@types/express@5.0.0"
-import { Request, Response, NextFunction } from "npm:express@4.21.2";
+// @deno-types="@types/express"
+import { Request, Response, NextFunction } from "express";
 
 const logger = (req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
