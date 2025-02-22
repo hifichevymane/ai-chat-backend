@@ -1,8 +1,8 @@
 {
   "tasks": {
-    "dev": "lms server start && deno run --env-file --allow-net --allow-read --allow-env --watch src/server.ts",
+    "dev": "lms server start && deno run --env-file --allow-net --allow-read --allow-env --watch src/main.ts",
     "stop": "lms server stop && lms unload --all",
-    "start": "lms server start && deno run --env-file --allow-net --allow-read --allow-env src/server.ts"
+    "start": "lms server start && deno run --env-file --allow-net --allow-read --allow-env src/main.ts"
   },
   "fmt": {
     "singleQuote": true
