@@ -1,7 +1,7 @@
 // @deno-types="@types/express"
-import { Router, Request, Response } from "express";
-import "@std/dotenv/load";
-import OpenAI from "@openai/openai";
+import { Request, Response, Router } from 'express';
+import '@std/dotenv/load';
+import OpenAI from '@openai/openai';
 
 const API_KEY = Deno.env.get('API_KEY');
 const LLM_BASE_URL = Deno.env.get('LLM_BASE_URL');
@@ -9,7 +9,7 @@ const MODEL_ID = Deno.env.get('MODEL_ID') || '';
 
 const client = new OpenAI({
   apiKey: API_KEY,
-  baseURL: LLM_BASE_URL
+  baseURL: LLM_BASE_URL,
 });
 
 const router = Router();
@@ -17,7 +17,7 @@ const router = Router();
 type EmptyObject = Record<string | number | symbol, never>;
 
 interface ChatRequestBody {
-  prompt: string
+  prompt: string;
 }
 
 interface ChatResponseBody {
@@ -28,7 +28,11 @@ interface ErrorResponseBody {
   error: string;
 }
 
-type ChatRequest = Request<EmptyObject, ChatResponseBody | ErrorResponseBody, ChatRequestBody>;
+type ChatRequest = Request<
+  EmptyObject,
+  ChatResponseBody | ErrorResponseBody,
+  ChatRequestBody
+>;
 
 router.post('/chat', async (req: ChatRequest, res: Response) => {
   try {
@@ -37,8 +41,8 @@ router.post('/chat', async (req: ChatRequest, res: Response) => {
     const response = await client.chat.completions.create({
       model: MODEL_ID,
       messages: [{ role: 'user', content: prompt }],
-      stream: false
-    })
+      stream: false,
+    });
 
     res.json({ message: response.choices[0].message.content });
   } catch (err) {

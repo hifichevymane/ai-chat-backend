@@ -4,6 +4,9 @@
     "stop": "lms server stop && lms unload --all",
     "start": "lms server start && deno run --env-file --allow-net --allow-read --allow-env src/server.ts"
   },
+  "fmt": {
+    "singleQuote": true
+  },
   "imports": {
     "@openai/openai": "jsr:@openai/openai@^4.83.0",
     "@std/assert": "jsr:@std/assert@1",
