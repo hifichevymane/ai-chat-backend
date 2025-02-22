@@ -1,20 +1,20 @@
 // @deno-types="@types/express"
-import express from "express";
-import { Response } from "express";
+import express from 'express';
+import { Response } from 'express';
 // @deno-types="@types/cors"
-import cors from "cors";
-import logger from "./logger.ts";
+import cors from 'cors';
+import logger from './logger.ts';
 
-import "@std/dotenv/load";
-import routes from "./routes/index.ts";
+import '@std/dotenv/load';
+import routes from './routes/index.ts';
 
 const APP_PORT = Number(Deno.env.get('APP_PORT')) || 8000;
 
 const app = express();
 
 const corsOptions: cors.CorsOptions = {
-  origin: Deno.env.get('FRONTEND_ALLOWED_URL')
-}
+  origin: Deno.env.get('FRONTEND_ALLOWED_URL'),
+};
 
 app.use(cors(corsOptions));
 app.use(logger);
