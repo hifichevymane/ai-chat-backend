@@ -38,13 +38,16 @@ router.post('/chat', async (req: ChatRequest, res: Response) => {
   try {
     const { prompt } = req.body;
 
-    const response = await client.chat.completions.create({
+    const stream = await client.chat.completions.create({
       model: MODEL_ID,
       messages: [{ role: 'user', content: prompt }],
-      stream: false,
+      stream: true,
     });
 
-    res.json({ message: response.choices[0].message.content });
+    for await (const chunk of stream) {
+      res.write(chunk.choices[0]?.delta?.content || '');
+    }
+    res.end();
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
