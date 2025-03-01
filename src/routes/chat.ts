@@ -3,7 +3,7 @@ import { Request, Response, Router } from 'express';
 import '@std/dotenv/load';
 import ollama from 'ollama';
 
-const MODEL_ID = Deno.env.get('MODEL_ID') || '';
+import { MODEL_ID } from '../constants.ts';
 
 const router = Router();
 
