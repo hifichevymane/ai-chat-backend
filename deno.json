@@ -1,16 +1,18 @@
 {
   "tasks": {
-    "dev": "lms server start && deno run --env-file --allow-net --allow-read --allow-env --watch src/server.ts",
-    "stop": "lms server stop && lms unload --all",
-    "start": "lms server start && deno run --env-file --allow-net --allow-read --allow-env src/server.ts"
+    "dev": "deno run --env-file --allow-net --allow-read --allow-env --watch src/main.ts",
+    "start": "deno run --env-file --allow-net --allow-read --allow-env src/main.ts"
+  },
+  "fmt": {
+    "singleQuote": true
   },
   "imports": {
-    "@openai/openai": "jsr:@openai/openai@^4.83.0",
     "@std/assert": "jsr:@std/assert@1",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.3",
     "@types/cors": "npm:@types/cors@^2.8.17",
     "@types/express": "npm:@types/express@^5.0.0",
     "cors": "npm:cors@^2.8.5",
-    "express": "npm:express@^4.21.2"
+    "express": "npm:express@^4.21.2",
+    "ollama": "npm:ollama@^0.5.14"
   }
 }

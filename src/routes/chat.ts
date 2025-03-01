@@ -1,23 +1,16 @@
 // @deno-types="@types/express"
-import { Router, Request, Response } from "express";
-import "@std/dotenv/load";
-import OpenAI from "@openai/openai";
+import { Request, Response, Router } from 'express';
+import '@std/dotenv/load';
+import ollama from 'ollama';
 
-const API_KEY = Deno.env.get('API_KEY');
-const LLM_BASE_URL = Deno.env.get('LLM_BASE_URL');
-const MODEL_ID = Deno.env.get('MODEL_ID') || '';
-
-const client = new OpenAI({
-  apiKey: API_KEY,
-  baseURL: LLM_BASE_URL
-});
+import { MODEL_ID } from '../constants.ts';
 
 const router = Router();
 
 type EmptyObject = Record<string | number | symbol, never>;
 
 interface ChatRequestBody {
-  prompt: string
+  prompt: string;
 }
 
 interface ChatResponseBody {
@@ -28,19 +21,26 @@ interface ErrorResponseBody {
   error: string;
 }
 
-type ChatRequest = Request<EmptyObject, ChatResponseBody | ErrorResponseBody, ChatRequestBody>;
+type ChatRequest = Request<
+  EmptyObject,
+  ChatResponseBody | ErrorResponseBody,
+  ChatRequestBody
+>;
 
 router.post('/chat', async (req: ChatRequest, res: Response) => {
   try {
     const { prompt } = req.body;
 
-    const response = await client.chat.completions.create({
+    const stream = await ollama.chat({
       model: MODEL_ID,
       messages: [{ role: 'user', content: prompt }],
-      stream: false
-    })
+      stream: true,
+    });
 
-    res.json({ message: response.choices[0].message.content });
+    for await (const chunk of stream) {
+      res.write(chunk.message.content);
+    }
+    res.end();
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
