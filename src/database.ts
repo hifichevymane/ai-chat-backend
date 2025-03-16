@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Chat } from './entities/Chat.ts';
+import { Chat } from './entities/Chat.entity.ts';
 
 export const DatabaseSource = new DataSource({
   type: 'postgres',
@@ -11,8 +11,8 @@ export const DatabaseSource = new DataSource({
   synchronize: true,
   logging: true,
   entities: [Chat],
-  migrations: ['./migrations/*.ts'],
-  subscribers: ['./subscribers/*.ts'],
+  migrations: ['src/migrations/*.ts'],
+  subscribers: ['src/subscribers/*.ts'],
 });
 
 export const initializeDB = async () => {

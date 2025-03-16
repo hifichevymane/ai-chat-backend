@@ -2,8 +2,9 @@
 import { Request, Response, Router } from 'express';
 import '@std/dotenv/load';
 import ollama from 'ollama';
-import { Chat } from '../entities/Chat.ts';
+import { Chat } from '../entities/Chat.entity.ts';
 import { DatabaseSource } from '../database.ts';
+import { ChatMessage } from '../entities/ChatMessage.ts';
 
 import { MODEL_ID } from '../constants.ts';
 
@@ -11,11 +12,11 @@ const router = Router();
 
 type EmptyObject = Record<string | number | symbol, never>;
 
-interface ChatRequestBody {
+interface ChatPromptRequestBody {
   prompt: string;
 }
 
-interface ChatResponseBody {
+interface ChatPromptResponseBody {
   message: string | null;
 }
 
@@ -23,42 +24,64 @@ interface ErrorResponseBody {
   error: string;
 }
 
-type ChatRequest = Request<
+interface ChatPromptQuery {
+  id: string
+}
+
+type ChatPromptRequest = Request<
   EmptyObject,
-  ChatResponseBody | ErrorResponseBody,
-  ChatRequestBody
+  ChatPromptResponseBody | ErrorResponseBody,
+  ChatPromptRequestBody,
+  ChatPromptQuery
 >;
 
-router.post('/chat', async (req: ChatRequest, res: Response) => {
+router.post('/chat', async (_, res: Response) => {
   try {
-    const { prompt } = req.body;
-
-    const stream = await ollama.chat({
-      model: MODEL_ID,
-      messages: [{ role: 'user', content: prompt }],
-      stream: true,
-    });
-
-    for await (const chunk of stream) {
-      res.write(chunk.message.content);
-    }
-    res.end();
+    const chat = new Chat();
+    chat.title = 'New Chat';
+    const chatRepository = DatabaseSource.getRepository(Chat);
+    await chatRepository.save(chat);
+    res.status(201).json(chat);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-router.post('/create-chat', async (req: Request, res: Response) => {
+router.patch('/chat/:id/prompt', async (req: ChatPromptRequest, res: Response) => {
+  const chatRepository = DatabaseSource.getRepository(Chat);
+  let currentChat: Chat | null = null;
+  const { id } = req.query;
+
   try {
-    const { title } = req.body;
-    const chat = new Chat();
-    chat.title = title;
+    currentChat = await chatRepository.findOneByOrFail({ id });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: `The chat with id: ${id} wasn't found` });
+    return;
+  }
 
-    const chatRepository = DatabaseSource.getRepository(Chat);
-    const result = await chatRepository.save(chat);
+  try {
+    const { prompt } = req.body;
 
-    res.status(201).json(result);
+    const messages: ChatMessage[] = [...currentChat.context, { role: 'user', content: prompt }];
+    const stream = await ollama.chat({
+      model: MODEL_ID,
+      messages,
+      stream: true,
+    });
+
+    const responseChunks = [];
+    for await (const chunk of stream) {
+      res.write(chunk.message.content);
+      responseChunks.push(chunk.message.content);
+    }
+
+    messages.push({ role: 'assistant', content: responseChunks.join('') });
+    currentChat.context = messages;
+    await chatRepository.save(currentChat);
+
+    res.end();
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
