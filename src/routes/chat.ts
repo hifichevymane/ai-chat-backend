@@ -35,7 +35,19 @@ type ChatPromptRequest = Request<
   ChatPromptQuery
 >;
 
-router.post('/chat', async (_, res: Response) => {
+router.get('/chats/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const chatRepository = DatabaseSource.getRepository(Chat);
+    const chat = await chatRepository.findOneByOrFail({ id });
+    res.status(200).json(chat);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ error: `The record with id ${id} was not found` });
+  }
+});
+
+router.post('/chats', async (_, res: Response) => {
   try {
     const chat = new Chat();
     chat.title = 'New Chat';
@@ -48,18 +60,19 @@ router.post('/chat', async (_, res: Response) => {
   }
 });
 
-router.patch('/chat/:id/prompt', async (req: ChatPromptRequest, res: Response) => {
+router.patch('/chats/:id/prompt', async (req: ChatPromptRequest, res: Response) => {
   const chatRepository = DatabaseSource.getRepository(Chat);
   let currentChat: Chat | null = null;
-  const { id } = req.query;
+  const { id } = req.params;
 
   try {
     currentChat = await chatRepository.findOneByOrFail({ id });
   } catch (err) {
     console.error(err);
     res.status(400).json({ error: `The chat with id: ${id} wasn't found` });
-    return;
   }
+
+  if (!currentChat) return;
 
   try {
     const { prompt } = req.body;
