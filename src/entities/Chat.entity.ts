@@ -15,12 +15,12 @@ export class Chat {
   @Column({ length: 64 })
   title: string;
 
-  @Column('jsonb', { nullable: true })
+  @Column('jsonb', { default: [] })
   context: ChatMessage[];
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date
 }

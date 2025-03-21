@@ -9,7 +9,7 @@ export const DatabaseSource = new DataSource({
   password: Deno.env.get('DB_PASSWORD'),
   database: Deno.env.get('DB_DATABASE') || 'ai_chat',
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: [Chat],
   migrations: ['src/migrations/*.ts'],
   subscribers: ['src/subscribers/*.ts'],
