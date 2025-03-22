@@ -12,7 +12,7 @@ import '@std/dotenv/load';
 import routes from './routes/index.ts';
 import { MODEL_ID } from './constants.ts';
 
-await initializeDB();
+initializeDB();
 
 const APP_PORT = Number(Deno.env.get('APP_PORT')) || 8000;
 
