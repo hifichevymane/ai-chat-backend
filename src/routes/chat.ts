@@ -38,7 +38,9 @@ type ChatPromptRequest = Request<
 router.get('/chats', async (_, res: Response) => {
   try {
     const chatRepository = DatabaseSource.getRepository(Chat);
-    const chats = await chatRepository.find();
+    const chats = await chatRepository.find({
+      order: { createdAt: 'DESC' }
+    });
     res.status(200).json(chats);
   } catch (err) {
     console.error(err);
