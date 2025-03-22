@@ -35,6 +35,17 @@ type ChatPromptRequest = Request<
   ChatPromptQuery
 >;
 
+router.get('/chats', async (_, res: Response) => {
+  try {
+    const chatRepository = DatabaseSource.getRepository(Chat);
+    const chats = await chatRepository.find();
+    res.status(200).json(chats);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Error' });
+  }
+});
+
 router.get('/chats/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
