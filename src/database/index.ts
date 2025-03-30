@@ -1,3 +1,4 @@
+import '@std/dotenv/load';
 import { DataSource } from 'typeorm';
 import { Chat } from './entities/Chat.entity.ts';
 

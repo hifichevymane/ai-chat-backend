@@ -6,7 +6,7 @@ import cors from 'cors';
 import logger from './logger.ts';
 import ollama from 'ollama';
 import 'reflect-metadata';
-import { initializeDB } from './database.ts';
+import { initializeDB } from './database/index.ts';
 import '@std/dotenv/load';
 
 import routes from './routes/index.ts';
