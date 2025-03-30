@@ -1,8 +1,8 @@
 // @deno-types="@types/express"
 import { Router } from 'express';
-import v1 from './v1/index.ts';
+import chats from './chats.ts';
 
 const router = Router();
-router.use('/v1', v1);
+router.use('/chats', chats);
 
 export default router;

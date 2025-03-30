@@ -1,14 +1,12 @@
 // @deno-types="@types/express"
-import { Request, Response, Router } from 'express';
+import { Request, Response } from 'express';
 import '@std/dotenv/load';
 import ollama from 'ollama';
-import { Chat } from '../entities/Chat.entity.ts';
-import { DatabaseSource } from '../database.ts';
-import { ChatMessage } from '../entities/ChatMessage.ts';
+import { Chat } from '../../entities/Chat.entity.ts';
+import { DatabaseSource } from '../../database.ts';
+import { ChatMessage } from '../../entities/ChatMessage.ts';
 
-import { MODEL_ID } from '../constants.ts';
-
-const router = Router();
+import { MODEL_ID } from '../../constants.ts';
 
 type EmptyObject = Record<string | number | symbol, never>;
 
@@ -35,45 +33,7 @@ type ChatPromptRequest = Request<
   ChatPromptQuery
 >;
 
-router.get('/chats', async (_, res: Response) => {
-  try {
-    const chatRepository = DatabaseSource.getRepository(Chat);
-    const chats = await chatRepository.find({
-      order: { createdAt: 'DESC' }
-    });
-    res.status(200).json(chats);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Error' });
-  }
-});
-
-router.get('/chats/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
-  try {
-    const chatRepository = DatabaseSource.getRepository(Chat);
-    const chat = await chatRepository.findOneByOrFail({ id });
-    res.status(200).json(chat);
-  } catch (err) {
-    console.error(err);
-    res.status(404).json({ error: `The record with id ${id} was not found` });
-  }
-});
-
-router.post('/chats', async (_, res: Response) => {
-  try {
-    const chat = new Chat();
-    chat.title = 'New Chat';
-    const chatRepository = DatabaseSource.getRepository(Chat);
-    await chatRepository.save(chat);
-    res.status(201).json(chat);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-router.patch('/chats/:id/prompt', async (req: ChatPromptRequest, res: Response) => {
+export const generatePromptResponse = async (req: ChatPromptRequest, res: Response) => {
   const chatRepository = DatabaseSource.getRepository(Chat);
   let currentChat: Chat | null = null;
   const { id } = req.params;
@@ -112,6 +72,4 @@ router.patch('/chats/:id/prompt', async (req: ChatPromptRequest, res: Response) 
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-});
-
-export default router;
+};

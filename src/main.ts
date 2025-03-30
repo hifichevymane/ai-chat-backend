@@ -25,7 +25,7 @@ const corsOptions: cors.CorsOptions = {
 app.use(cors(corsOptions));
 app.use(logger);
 app.use(express.json());
-app.use('/api/v1', routes);
+app.use('/api', routes);
 
 app.get('/api/v1/health-check', (_, res: Response) => {
   res.json({ code: 200, status: 'OK' });
