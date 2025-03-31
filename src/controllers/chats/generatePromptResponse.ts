@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import '@std/dotenv/load';
 import ollama from 'ollama';
-import { Chat } from '../../database/entities/Chat.entity.ts';
+import { Chat } from '../../database/entities/Chat.ts';
 import { DatabaseSource } from '../../database/index.ts';
 import { ChatMessage } from '../../database/entities/ChatMessage.ts';
 

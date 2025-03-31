@@ -1,6 +1,6 @@
 import '@std/dotenv/load';
 import { DataSource } from 'typeorm';
-import { Chat } from './entities/Chat.entity.ts';
+import { Chat } from './entities/Chat.ts';
 
 export const DatabaseSource = new DataSource({
   type: 'postgres',

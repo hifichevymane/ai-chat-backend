@@ -1,7 +1,7 @@
 // @deno-types="@types/express"
 import { Request, Response } from 'express';
 import { DatabaseSource } from '../../database/index.ts';
-import { Chat } from '../../database/entities/Chat.entity.ts';
+import { Chat } from '../../database/entities/Chat.ts';
 
 export const getChatById = async (req: Request, res: Response) => {
   const { id } = req.params;
