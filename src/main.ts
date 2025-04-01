@@ -1,11 +1,11 @@
 // @deno-types="@types/express"
 import express from 'express';
 import { Response } from 'express';
+import 'reflect-metadata';
 // @deno-types="@types/cors"
 import cors from 'cors';
 import logger from './logger.ts';
 import ollama from 'ollama';
-import 'reflect-metadata';
 import { initializeDB } from './database/index.ts';
 import '@std/dotenv/load';
 

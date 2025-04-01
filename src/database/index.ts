@@ -1,6 +1,7 @@
 import '@std/dotenv/load';
 import { DataSource } from 'typeorm';
 import { Chat } from './entities/Chat.ts';
+import { User } from './entities/User.ts';
 
 export const DatabaseSource = new DataSource({
   type: 'postgres',
@@ -11,9 +12,9 @@ export const DatabaseSource = new DataSource({
   database: Deno.env.get('DB_DATABASE') || 'ai_chat',
   synchronize: true,
   logging: false,
-  entities: [Chat],
-  migrations: ['src/migrations/*.ts'],
-  subscribers: ['src/subscribers/*.ts'],
+  entities: [Chat, User],
+  migrations: ['src/database/migrations/*.ts'],
+  subscribers: ['src/database/subscribers/*.ts'],
 });
 
 export const initializeDB = async () => {
