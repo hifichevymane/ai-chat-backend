@@ -2,8 +2,8 @@ import '@std/dotenv/load';
 import 'reflect-metadata';
 
 import express from 'express';
-import { Response } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import logger from './logger.ts';
 import ollama from 'ollama';
 
@@ -22,13 +22,12 @@ const corsOptions: cors.CorsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(logger);
+app.use(helmet());
 app.use(express.json());
-app.use('/api', routes);
+app.use(express.urlencoded({ extended: true }));
+app.use(logger);
 
-app.get('/api/v1/health-check', (_, res: Response) => {
-  res.json({ code: 200, status: 'OK' });
-});
+app.use('/api', routes);
 
 app.listen(APP_PORT, async () => {
   // Load the llm model

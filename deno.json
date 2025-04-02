@@ -21,6 +21,7 @@
     "bcrypt": "npm:bcrypt@^5.1.1",
     "cors": "npm:cors@^2.8.5",
     "express": "npm:express@^4.21.2",
+    "helmet": "npm:helmet@^8.1.0",
     "ollama": "npm:ollama@^0.5.14",
     "pg": "npm:pg@^8.13.3",
     "reflect-metadata": "npm:reflect-metadata@^0.2.2",

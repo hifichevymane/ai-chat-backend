@@ -19,6 +19,7 @@
     "npm:express@4.18.2": "4.18.2",
     "npm:express@4.21.2": "4.21.2",
     "npm:express@^4.21.2": "4.21.2",
+    "npm:helmet@^8.1.0": "8.1.0",
     "npm:morgan@1.10.0": "1.10.0",
     "npm:ollama@~0.5.14": "0.5.14",
     "npm:pg@^8.13.3": "8.13.3",
@@ -638,6 +639,9 @@
       "dependencies": [
         "function-bind"
       ]
+    },
+    "helmet@8.1.0": {
+      "integrity": "sha512-jOiHyAZsmnr8LqoPGmCjYAaiuWwjAPLgY8ZX2XrmHawt99/u1y6RgrZMTeoPfpUbV96HOalYgz1qzkRbw54Pmg=="
     },
     "http-errors@2.0.0": {
       "integrity": "sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==",
@@ -1305,6 +1309,7 @@
       "npm:bcrypt@^5.1.1",
       "npm:cors@^2.8.5",
       "npm:express@^4.21.2",
+      "npm:helmet@^8.1.0",
       "npm:ollama@~0.5.14",
       "npm:pg@^8.13.3",
       "npm:reflect-metadata@~0.2.2",
