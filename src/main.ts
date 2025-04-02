@@ -1,14 +1,13 @@
-// @deno-types="@types/express"
+import '@std/dotenv/load';
+import 'reflect-metadata';
+
 import express from 'express';
 import { Response } from 'express';
-import 'reflect-metadata';
-// @deno-types="@types/cors"
 import cors from 'cors';
 import logger from './logger.ts';
 import ollama from 'ollama';
-import { initializeDB } from './database/index.ts';
-import '@std/dotenv/load';
 
+import { initializeDB } from './database/index.ts';
 import routes from './routes/index.ts';
 import { MODEL_ID } from './constants.ts';
 

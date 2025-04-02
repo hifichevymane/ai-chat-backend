@@ -1,6 +1,7 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@panva/jose@^6.0.10": "6.0.10",
     "jsr:@std/assert@1": "1.0.11",
     "jsr:@std/dotenv@*": "0.225.3",
     "jsr:@std/dotenv@~0.225.3": "0.225.3",
@@ -26,6 +27,9 @@
     "npm:typeorm@~0.3.21": "0.3.21_reflect-metadata@0.2.2"
   },
   "jsr": {
+    "@panva/jose@6.0.10": {
+      "integrity": "bd6e916d7b0bdb34a76752c701aaa25828326885e199714ac81741b6caef7143"
+    },
     "@std/assert@1.0.11": {
       "integrity": "2461ef3c368fe88bc60e186e7744a93112f16fd110022e113a0849e94d1c83c1",
       "dependencies": [
@@ -1292,6 +1296,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@panva/jose@^6.0.10",
       "jsr:@std/assert@1",
       "jsr:@std/dotenv@~0.225.3",
       "npm:@types/bcrypt@^5.0.2",
