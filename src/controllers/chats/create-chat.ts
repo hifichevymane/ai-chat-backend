@@ -1,13 +1,13 @@
 // @deno-types="@types/express"
 import { Request, Response } from 'express';
-import { DatabaseSource } from '../../database/index.ts';
+import { getRepository } from '../../database/index.ts';
 import { Chat } from '../../database/entities/Chat.ts';
 
 export const createChat = async (_: Request, res: Response) => {
   try {
     const chat = new Chat();
     chat.title = 'New Chat';
-    const chatRepository = DatabaseSource.getRepository(Chat);
+    const chatRepository = getRepository(Chat);
     await chatRepository.save(chat);
     res.status(201).json(chat);
   } catch (err) {

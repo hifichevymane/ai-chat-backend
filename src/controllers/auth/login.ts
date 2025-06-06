@@ -1,7 +1,7 @@
 import '@std/dotenv/load';
 import { Request, Response } from 'express';
 import { SignJWT } from "@panva/jose";
-import { DatabaseSource } from '../../database/index.ts';
+import { getRepository } from '../../database/index.ts';
 import { User } from '../../database/entities/User.ts';
 
 export const login = async (req: Request, res: Response) => {
@@ -13,7 +13,7 @@ export const login = async (req: Request, res: Response) => {
   }
 
   try {
-    const userRepository = DatabaseSource.getRepository(User);
+    const userRepository = getRepository(User);
     const user = await userRepository.findOne({ where: { email } });
 
     if (!user) {

@@ -31,6 +31,8 @@ app.use('/api', routes);
 
 app.listen(APP_PORT, async () => {
   // Load the llm model
+  console.log('Start loading LLM...');
+
   const llmResponse = await ollama.chat({
     model: MODEL_ID,
     messages: [],

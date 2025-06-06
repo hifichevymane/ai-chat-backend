@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DatabaseSource } from '../../database/index.ts';
+import { getRepository } from '../../database/index.ts';
 import { User } from '../../database/entities/User.ts';
 
 export const signUp = async (req: Request, res: Response) => {
@@ -7,7 +7,7 @@ export const signUp = async (req: Request, res: Response) => {
     const { email, name, password } = req.body;
 
     // Check if the user already exists
-    const userRepository = DatabaseSource.getRepository(User);
+    const userRepository = getRepository(User);
     const existingUser = await userRepository.findOne({ where: { email, name } });
 
     if (existingUser) {

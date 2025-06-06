@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import '@std/dotenv/load';
 import ollama from 'ollama';
 import { Chat } from '../../database/entities/Chat.ts';
-import { DatabaseSource } from '../../database/index.ts';
+import { getRepository } from '../../database/index.ts';
 import { ChatMessage } from '../../database/entities/ChatMessage.ts';
 
 import { MODEL_ID } from '../../constants.ts';
@@ -34,7 +34,7 @@ type ChatPromptRequest = Request<
 >;
 
 export const generatePromptResponse = async (req: ChatPromptRequest, res: Response) => {
-  const chatRepository = DatabaseSource.getRepository(Chat);
+  const chatRepository = getRepository(Chat);
   let currentChat: Chat | null = null;
   const { id } = req.params;
 

@@ -1,4 +1,3 @@
-// @deno-types="@types/express"
 import { Router } from 'express';
 
 import {
