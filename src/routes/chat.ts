@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import ollama from 'ollama';
 import { Chat } from '../entities/Chat.ts';
-import { DatabaseSource } from '../database.ts';
+import { databaseSource } from '../database/index.ts';
 import { ChatMessage } from '../interfaces/ChatMessage.ts';
 
 const MODEL_ID = process.env.MODEL_ID;
@@ -35,7 +35,7 @@ type ChatPromptRequest = Request<
 
 router.get('/chats', async (_, res: Response) => {
   try {
-    const chatRepository = DatabaseSource.getRepository(Chat);
+    const chatRepository = databaseSource.getRepository(Chat);
     const chats = await chatRepository.find({
       order: { createdAt: 'DESC' }
     });
@@ -49,7 +49,7 @@ router.get('/chats', async (_, res: Response) => {
 router.get('/chats/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const chatRepository = DatabaseSource.getRepository(Chat);
+    const chatRepository = databaseSource.getRepository(Chat);
     const chat = await chatRepository.findOneByOrFail({ id });
     res.status(200).json(chat);
   } catch (err) {
@@ -62,7 +62,7 @@ router.post('/chats', async (_, res: Response) => {
   try {
     const chat = new Chat();
     chat.title = 'New Chat';
-    const chatRepository = DatabaseSource.getRepository(Chat);
+    const chatRepository = databaseSource.getRepository(Chat);
     await chatRepository.save(chat);
     res.status(201).json(chat);
   } catch (err) {
@@ -74,7 +74,7 @@ router.post('/chats', async (_, res: Response) => {
 router.patch(
   '/chats/:id/prompt',
   async (req: ChatPromptRequest, res: Response) => {
-    const chatRepository = DatabaseSource.getRepository(Chat);
+    const chatRepository = databaseSource.getRepository(Chat);
     let currentChat: Chat | null = null;
     const { id } = req.params;
 

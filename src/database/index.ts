@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 
-export const DatabaseSource = new DataSource({
+export const databaseSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 5432,
@@ -10,11 +10,11 @@ export const DatabaseSource = new DataSource({
   synchronize: false,
   logging: false,
   entities: ['src/entities/*.ts'],
-  migrations: ['src/migrations/*.ts'],
-  subscribers: ['src/subscribers/*.ts']
+  migrations: ['src/database/migrations/*.ts'],
+  subscribers: ['src/database/subscribers/*.ts']
 });
 
 export const initializeDatabase = async (): Promise<void> => {
-  await DatabaseSource.initialize();
+  await databaseSource.initialize();
   console.log('Database connection established');
 };
