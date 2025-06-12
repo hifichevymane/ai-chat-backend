@@ -1,10 +1,8 @@
-// @deno-types="@types/express"
 import { Request, Response, Router } from 'express';
-import '@std/dotenv/load';
 import ollama from 'ollama';
-import { Chat } from '../entities/Chat.entity.ts';
+import { Chat } from '../entities/Chat.ts';
 import { DatabaseSource } from '../database.ts';
-import { ChatMessage } from '../entities/ChatMessage.ts';
+import { ChatMessage } from '../interfaces/ChatMessage.ts';
 
 const MODEL_ID = process.env.MODEL_ID;
 
