@@ -6,7 +6,7 @@ import { Chat } from '../entities/Chat.entity.ts';
 import { DatabaseSource } from '../database.ts';
 import { ChatMessage } from '../entities/ChatMessage.ts';
 
-import { MODEL_ID } from '../constants.ts';
+const MODEL_ID = process.env.MODEL_ID;
 
 const router = Router();
 
@@ -25,7 +25,7 @@ interface ErrorResponseBody {
 }
 
 interface ChatPromptQuery {
-  id: string
+  id: string;
 }
 
 type ChatPromptRequest = Request<
@@ -73,45 +73,51 @@ router.post('/chats', async (_, res: Response) => {
   }
 });
 
-router.patch('/chats/:id/prompt', async (req: ChatPromptRequest, res: Response) => {
-  const chatRepository = DatabaseSource.getRepository(Chat);
-  let currentChat: Chat | null = null;
-  const { id } = req.params;
+router.patch(
+  '/chats/:id/prompt',
+  async (req: ChatPromptRequest, res: Response) => {
+    const chatRepository = DatabaseSource.getRepository(Chat);
+    let currentChat: Chat | null = null;
+    const { id } = req.params;
 
-  try {
-    currentChat = await chatRepository.findOneByOrFail({ id });
-  } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: `The chat with id: ${id} wasn't found` });
-  }
-
-  if (!currentChat) return;
-
-  try {
-    const { prompt } = req.body;
-
-    const messages: ChatMessage[] = [...currentChat.context, { role: 'user', content: prompt }];
-    const stream = await ollama.chat({
-      model: MODEL_ID,
-      messages,
-      stream: true,
-    });
-
-    const responseChunks = [];
-    for await (const chunk of stream) {
-      res.write(chunk.message.content);
-      responseChunks.push(chunk.message.content);
+    try {
+      currentChat = await chatRepository.findOneByOrFail({ id });
+    } catch (err) {
+      console.error(err);
+      res.status(400).json({ error: `The chat with id: ${id} wasn't found` });
     }
 
-    messages.push({ role: 'assistant', content: responseChunks.join('') });
-    currentChat.context = messages;
-    await chatRepository.save(currentChat);
+    if (!currentChat) return;
 
-    res.end();
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    try {
+      const { prompt } = req.body;
+
+      const messages: ChatMessage[] = [
+        ...currentChat.context,
+        { role: 'user', content: prompt }
+      ];
+      const stream = await ollama.chat({
+        model: MODEL_ID,
+        messages,
+        stream: true
+      });
+
+      const responseChunks = [];
+      for await (const chunk of stream) {
+        res.write(chunk.message.content);
+        responseChunks.push(chunk.message.content);
+      }
+
+      messages.push({ role: 'assistant', content: responseChunks.join('') });
+      currentChat.context = messages;
+      await chatRepository.save(currentChat);
+
+      res.end();
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
-});
+);
 
 export default router;

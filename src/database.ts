@@ -14,12 +14,7 @@ export const DatabaseSource = new DataSource({
   subscribers: ['src/subscribers/*.ts']
 });
 
-export const initializeDB = async (): Promise<void> => {
-  try {
-    await DatabaseSource.initialize();
-    console.log('Database connection established');
-  } catch (err) {
-    console.error('Error connecting to database:', err);
-    throw err;
-  }
+export const initializeDatabase = async (): Promise<void> => {
+  await DatabaseSource.initialize();
+  console.log('Database connection established');
 };
