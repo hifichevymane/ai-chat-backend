@@ -1,25 +1,26 @@
-// @deno-types="@types/express"
+import dotenv from 'dotenv';
+dotenv.config();
+
+import 'reflect-metadata';
+
 import express from 'express';
 import { Response } from 'express';
-// @deno-types="@types/cors"
 import cors from 'cors';
-import logger from './logger.ts';
+import logger from './logger';
 import ollama from 'ollama';
-import 'reflect-metadata';
-import { initializeDB } from './database.ts';
-import '@std/dotenv/load';
+import { initializeDB } from './database';
 
-import routes from './routes/index.ts';
-import { MODEL_ID } from './constants.ts';
+import routes from './routes';
+import { MODEL_ID } from './constants';
 
 initializeDB();
 
-const APP_PORT = Number(Deno.env.get('APP_PORT')) || 8000;
+const APP_PORT = Number(process.env.APP_PORT) || 8000;
 
 const app = express();
 
 const corsOptions: cors.CorsOptions = {
-  origin: Deno.env.get('FRONTEND_ALLOWED_URL'),
+  origin: process.env.FRONTEND_ALLOWED_URL
 };
 
 app.use(cors(corsOptions));
@@ -35,7 +36,7 @@ app.listen(APP_PORT, async () => {
   // Load the llm model
   const llmResponse = await ollama.chat({
     model: MODEL_ID,
-    messages: [],
+    messages: []
   });
 
   if (llmResponse.done) {

@@ -1,21 +1,20 @@
 import { DataSource } from 'typeorm';
-import { Chat } from './entities/Chat.entity.ts';
 
 export const DatabaseSource = new DataSource({
   type: 'postgres',
-  host: Deno.env.get('DB_HOST') || 'localhost',
-  port: parseInt(Deno.env.get('DB_PORT') || '5432'),
-  username: Deno.env.get('DB_USERNAME'),
-  password: Deno.env.get('DB_PASSWORD'),
-  database: Deno.env.get('DB_DATABASE') || 'ai_chat',
-  synchronize: true,
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT) || 5432,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE || 'ai_chat',
+  synchronize: false,
   logging: false,
-  entities: [Chat],
+  entities: ['src/entities/*.ts'],
   migrations: ['src/migrations/*.ts'],
-  subscribers: ['src/subscribers/*.ts'],
+  subscribers: ['src/subscribers/*.ts']
 });
 
-export const initializeDB = async () => {
+export const initializeDB = async (): Promise<void> => {
   try {
     await DatabaseSource.initialize();
     console.log('Database connection established');
