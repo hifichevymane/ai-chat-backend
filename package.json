@@ -8,7 +8,10 @@
     "dev": "tsx watch src/main.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "migration:generate": "typeorm-ts-node-esm migration:generate -p -d ./src/database/index.ts",
+    "migration:run": "typeorm-ts-node-esm migration:run",
+    "migration:revert": "typeorm-ts-node-esm migration:revert"
   },
   "type": "module",
   "keywords": [],
@@ -35,6 +38,7 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
     "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
     "tsx": "^4.20.2",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.0"
