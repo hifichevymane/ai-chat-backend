@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
-import { getRepository } from '../../database';
-import { Chat } from '../../entities/Chat';
+import { ChatService } from '../../services';
 
 export const show = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   try {
-    const chatRepository = getRepository(Chat);
-    const chat = await chatRepository.findOneByOrFail({ id });
+    const chatService = new ChatService();
+    const chat = await chatService.getChatById(id);
     res.status(200).json(chat);
   } catch (err) {
     console.error(err);

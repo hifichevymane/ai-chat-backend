@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { getRepository } from '../../database';
 import { Chat } from '../../entities/Chat';
 import { ChatMessage } from '../../interfaces/ChatMessage';
+import { ChatService } from '../../services';
 
 type EmptyObject = Record<string | number | symbol, never>;
 
@@ -34,11 +35,12 @@ export const addPrompt = async (
   res: Response
 ): Promise<void> => {
   const chatRepository = getRepository(Chat);
+  const chatService = new ChatService();
   let currentChat: Chat | null = null;
   const { id } = req.params;
 
   try {
-    currentChat = await chatRepository.findOneByOrFail({ id });
+    currentChat = await chatService.getChatById(id);
   } catch (err) {
     console.error(err);
     res.status(400).json({ error: `The chat with id: ${id} wasn't found` });

@@ -1,13 +1,10 @@
 import { Request, Response } from 'express';
-import { getRepository } from '../../database';
-import { Chat } from '../../entities/Chat';
+import { ChatService } from '../../services';
 
 export const list = async (_: Request, res: Response): Promise<void> => {
   try {
-    const chatRepository = getRepository(Chat);
-    const chats = await chatRepository.find({
-      order: { createdAt: 'DESC' }
-    });
+    const chatService = new ChatService();
+    const chats = await chatService.getAllChats();
     res.status(200).json(chats);
   } catch (err) {
     console.error(err);
