@@ -1,6 +1,6 @@
-import { DataSource } from 'typeorm';
+import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm';
 
-export const databaseSource = new DataSource({
+const databaseSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
   port: Number(process.env.DB_PORT) || 5432,
@@ -13,6 +13,12 @@ export const databaseSource = new DataSource({
   migrations: ['src/database/migrations/*.ts'],
   subscribers: ['src/database/subscribers/*.ts']
 });
+
+export const getRepository = <Entity extends ObjectLiteral>(
+  target: EntityTarget<Entity>
+): Repository<Entity> => {
+  return databaseSource.getRepository(target);
+};
 
 export const initializeDatabase = async (): Promise<void> => {
   await databaseSource.initialize();
