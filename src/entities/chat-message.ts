@@ -24,7 +24,7 @@ export class ChatMessage {
   @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'text' })
   content: string;
 
   @CreateDateColumn({ name: 'created_at' })
