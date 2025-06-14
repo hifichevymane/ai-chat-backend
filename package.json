@@ -9,9 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
-    "migration:generate": "typeorm-ts-node-esm migration:generate -p -d ./src/database/index.ts",
-    "migration:run": "typeorm-ts-node-esm migration:run",
-    "migration:revert": "typeorm-ts-node-esm migration:revert"
+    "migration:generate": "typeorm-ts-node-esm migration:generate -d src/database/data-source.ts",
+    "migration:run": "typeorm-ts-node-esm migration:run -d src/database/data-source.ts",
+    "migration:revert": "typeorm-ts-node-esm migration:revert -d src/database/data-source.ts"
   },
   "type": "module",
   "keywords": [],
