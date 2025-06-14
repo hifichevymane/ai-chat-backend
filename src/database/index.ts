@@ -1,4 +1,5 @@
 import { DataSource, EntityTarget, ObjectLiteral, Repository } from 'typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 const databaseSource = new DataSource({
   type: 'postgres',
@@ -11,7 +12,8 @@ const databaseSource = new DataSource({
   logging: false,
   entities: ['src/entities/*.ts'],
   migrations: ['src/database/migrations/*.ts'],
-  subscribers: ['src/database/subscribers/*.ts']
+  subscribers: ['src/database/subscribers/*.ts'],
+  namingStrategy: new SnakeNamingStrategy()
 });
 
 export const getRepository = <Entity extends ObjectLiteral>(

@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { ChatMessage } from './chat-message';
 
-@Entity()
+@Entity('chats')
 export class Chat {
   @PrimaryGeneratedColumn('uuid')
   id: string;

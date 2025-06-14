@@ -13,7 +13,7 @@ export enum Role {
   SYSTEM = 'system'
 }
 
-@Entity()
+@Entity('chat_messages')
 export class ChatMessage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
