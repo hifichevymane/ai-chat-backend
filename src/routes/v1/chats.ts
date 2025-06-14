@@ -11,7 +11,7 @@ const router = Router();
 
 router.get('/', list);
 router.get('/:id', show);
-router.post('/', create);
-router.patch('/:id/generate-llm-response', generateLLMResponse);
+router.post('/new', create);
+router.post('/:id/generate-llm-response', generateLLMResponse);
 
 export default router;
