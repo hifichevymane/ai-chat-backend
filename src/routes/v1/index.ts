@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import v1 from './v1';
+import chats from './chats';
 
 const router = Router();
-router.use(v1);
+router.use(chats);
 
 export default router;

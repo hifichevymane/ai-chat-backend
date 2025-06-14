@@ -1,10 +1,8 @@
 import { Request, Response, Router } from 'express';
 import ollama from 'ollama';
-import { Chat } from '../entities/Chat.ts';
-import { databaseSource } from '../database/index.ts';
-import { ChatMessage } from '../interfaces/ChatMessage.ts';
-
-const MODEL_ID = process.env.MODEL_ID;
+import { Chat } from '../../entities/Chat.ts';
+import { databaseSource } from '../../database/index.ts';
+import { ChatMessage } from '../../interfaces/ChatMessage.ts';
 
 const router = Router();
 
@@ -95,7 +93,7 @@ router.patch(
         { role: 'user', content: prompt }
       ];
       const stream = await ollama.chat({
-        model: MODEL_ID,
+        model: process.env.MODEL_ID,
         messages,
         stream: true
       });

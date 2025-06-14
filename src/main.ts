@@ -46,9 +46,10 @@ const main = async (): Promise<void> => {
   app.use(helmet());
   app.use(morgan('dev'));
   app.use(express.json());
-  app.use('/api/v1', routes);
+  app.use(express.urlencoded({ extended: true }));
+  app.use('/api', routes);
 
-  app.get('/api/v1/health-check', (_, res: Response) => {
+  app.get('/api/health-check', (_, res: Response) => {
     res.json({ code: 200, status: 'OK' });
   });
 
