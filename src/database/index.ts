@@ -7,7 +7,7 @@ export const databaseSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE || 'ai_chat',
-  synchronize: false,
+  synchronize: true,
   logging: false,
   entities: ['src/entities/*.ts'],
   migrations: ['src/database/migrations/*.ts'],
