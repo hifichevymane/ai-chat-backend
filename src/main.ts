@@ -6,7 +6,8 @@ dotenv.config();
 import express from 'express';
 import { Response } from 'express';
 import cors from 'cors';
-import logger from './logger';
+import helmet from 'helmet';
+import morgan from 'morgan';
 import ollama from 'ollama';
 import { initializeDatabase } from './database';
 
@@ -39,7 +40,8 @@ const corsOptions: cors.CorsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(logger);
+app.use(helmet());
+app.use(morgan('dev'));
 app.use(express.json());
 app.use('/api/v1', routes);
 
