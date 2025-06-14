@@ -6,11 +6,12 @@ dotenv.config();
 import { Server } from 'http';
 import express from 'express';
 import { Response } from 'express';
-import ollama from 'ollama';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { initializeDatabase } from './database';
+
+import { LLMService } from './services';
 
 import routes from './routes';
 
@@ -19,12 +20,9 @@ const main = async (): Promise<void> => {
   try {
     await initializeDatabase();
     // Load the llm model
-    const llmResponse = await ollama.generate({
-      model: process.env.MODEL_ID,
-      prompt: ''
-    });
-
-    if (llmResponse.done) {
+    const llmService = new LLMService();
+    const isLoaded = await llmService.loadModel();
+    if (isLoaded) {
       console.log('LLM model has been loaded successfully!');
     } else {
       throw new Error('Error while loading LLM model');
@@ -62,12 +60,9 @@ await main();
 const gracefulShutdown = async (): Promise<void> => {
   try {
     // Unload the model
-    const llmResponse = await ollama.generate({
-      model: process.env.MODEL_ID,
-      prompt: '',
-      keep_alive: 0
-    });
-    if (llmResponse.done) {
+    const llmService = new LLMService();
+    const isUnloaded = await llmService.unloadModel();
+    if (isUnloaded) {
       console.log('LLM model has been unloaded successfully!');
     } else {
       throw new Error('Error while unloading LLM model');

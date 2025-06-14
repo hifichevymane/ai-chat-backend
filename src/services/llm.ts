@@ -1,5 +1,5 @@
 import ollama from 'ollama';
-import { ChatMessageDTO, Role } from '../entities/chat-message';
+import { ChatMessageDTO, Role } from '../entities/chat-message.ts';
 import { AbortableAsyncIterator, ChatResponse } from 'ollama';
 
 interface LLMResponse {
@@ -8,7 +8,26 @@ interface LLMResponse {
 }
 
 export class LLMService {
-  public async streamPromptResponse(
+  public async loadModel(): Promise<boolean> {
+    const { done } = await ollama.generate({
+      model: process.env.MODEL_ID,
+      prompt: ''
+    });
+
+    return done;
+  }
+
+  public async unloadModel(): Promise<boolean> {
+    const { done } = await ollama.generate({
+      model: process.env.MODEL_ID,
+      prompt: '',
+      keep_alive: 0
+    });
+
+    return done;
+  }
+
+  public streamPromptResponse(
     prompt: string,
     context: ChatMessageDTO[] = []
   ): Promise<AbortableAsyncIterator<ChatResponse>> {
@@ -17,7 +36,7 @@ export class LLMService {
       { role: Role.USER, content: prompt }
     ];
 
-    return await ollama.chat({
+    return ollama.chat({
       model: process.env.MODEL_ID,
       messages,
       stream: true
