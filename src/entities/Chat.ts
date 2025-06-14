@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany
 } from 'typeorm';
-import { ChatMessage } from './ChatMessage';
+import { ChatMessage } from './chat-message';
 
 @Entity()
 export class Chat {

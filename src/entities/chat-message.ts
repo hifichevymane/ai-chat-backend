@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   ManyToOne
 } from 'typeorm';
-import { Chat } from './Chat';
+import { Chat } from './chat';
 
 export enum Role {
   USER = 'user',

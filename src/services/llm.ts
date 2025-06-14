@@ -1,5 +1,5 @@
 import ollama from 'ollama';
-import { ChatMessageDTO, Role } from '../entities/ChatMessage';
+import { ChatMessageDTO, Role } from '../entities/chat-message';
 import { AbortableAsyncIterator, ChatResponse } from 'ollama';
 
 interface LLMResponse {

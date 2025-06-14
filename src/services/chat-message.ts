@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { getRepository } from '../database';
-import { ChatMessage, Role } from '../entities/ChatMessage';
-import { Chat } from '../entities/Chat';
+import { ChatMessage, Role } from '../entities/chat-message';
+import { Chat } from '../entities/chat';
 
 export class ChatMessageService {
   private readonly chatMessageRepository: Repository<ChatMessage> =
