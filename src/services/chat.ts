@@ -12,7 +12,10 @@ export class ChatService {
   }
 
   public async getChatById(id: string): Promise<Chat | null> {
-    return await this.chatRepository.findOneBy({ id });
+    return await this.chatRepository.findOne({
+      where: { id },
+      relations: { messages: true }
+    });
   }
 
   public async createAndInsertEmptyChat(): Promise<Chat> {
