@@ -5,14 +5,14 @@ import { Chat } from '../entities/chat';
 export class ChatService {
   private readonly chatRepository: Repository<Chat> = getRepository(Chat);
 
-  public async getAllChats(): Promise<Chat[]> {
-    return await this.chatRepository.find({
+  public getAllChats(): Promise<Chat[]> {
+    return this.chatRepository.find({
       order: { createdAt: 'DESC' }
     });
   }
 
-  public async getChatById(id: string): Promise<Chat | null> {
-    return await this.chatRepository.findOne({
+  public getChatById(id: string): Promise<Chat | null> {
+    return this.chatRepository.findOne({
       where: { id },
       relations: { messages: true }
     });
