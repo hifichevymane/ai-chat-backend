@@ -1,9 +1,9 @@
 import { Repository } from 'typeorm';
-import { Chat } from '../entities/Chat';
 import { getRepository } from '../database';
+import { Chat } from '../entities/Chat';
 
 export class ChatService {
-  private chatRepository: Repository<Chat> = getRepository(Chat);
+  private readonly chatRepository: Repository<Chat> = getRepository(Chat);
 
   public async getAllChats(): Promise<Chat[]> {
     return await this.chatRepository.find({
@@ -15,10 +15,11 @@ export class ChatService {
     return await this.chatRepository.findOneBy({ id });
   }
 
-  public async createEmptyChat(): Promise<Chat> {
-    const chat = new Chat();
-    chat.title = 'New Chat';
-    await this.chatRepository.save(chat);
+  public async createAndInsertEmptyChat(): Promise<Chat> {
+    const chat = this.chatRepository.create({
+      title: 'New Chat'
+    });
+    await this.chatRepository.insert(chat);
     return chat;
   }
 }

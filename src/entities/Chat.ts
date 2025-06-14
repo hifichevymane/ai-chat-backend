@@ -3,9 +3,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany
 } from 'typeorm';
-import { ChatMessage } from '../interfaces/ChatMessage.ts';
+import { ChatMessage } from './ChatMessage';
 
 @Entity()
 export class Chat {
@@ -15,8 +16,8 @@ export class Chat {
   @Column('varchar', { length: 64 })
   title: string;
 
-  @Column('jsonb', { default: [] })
-  context: ChatMessage[];
+  @OneToMany(() => ChatMessage, (chatMessage) => chatMessage.chat)
+  messages: ChatMessage[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

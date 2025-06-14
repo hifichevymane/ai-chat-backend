@@ -4,7 +4,7 @@ import { ChatService } from '../../services';
 export const create = async (_: Request, res: Response): Promise<void> => {
   try {
     const chatService = new ChatService();
-    const chat = await chatService.createEmptyChat();
+    const chat = await chatService.createAndInsertEmptyChat();
     res.status(201).json(chat);
   } catch (err) {
     console.error(err);
