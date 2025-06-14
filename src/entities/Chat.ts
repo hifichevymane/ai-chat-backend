@@ -3,11 +3,13 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany,
+  Relation
 } from 'typeorm';
-import { ChatMessage } from '../interfaces/ChatMessage.ts';
+import { ChatMessage } from './chat-message.ts';
 
-@Entity()
+@Entity('chats')
 export class Chat {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -15,8 +17,10 @@ export class Chat {
   @Column('varchar', { length: 64 })
   title: string;
 
-  @Column('jsonb', { default: [] })
-  context: ChatMessage[];
+  @OneToMany(() => ChatMessage, (chatMessage) => chatMessage.chat, {
+    onDelete: 'CASCADE'
+  })
+  messages: Relation<ChatMessage[]>;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

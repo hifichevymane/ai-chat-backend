@@ -24,6 +24,7 @@ export default tseslint.config(
     '.eslintrc.*',
     '.prettierrc.*',
     'coverage',
+    'src/database/migrations'
   ]),
   {
     languageOptions: {
@@ -32,13 +33,13 @@ export default tseslint.config(
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
         sourceType: 'module',
-        ecmaVersion: 2020,
-      },
+        ecmaVersion: 2020
+      }
     },
     files: ['**/*.ts'],
     plugins: {
       '@typescript-eslint': typescriptPlugin,
-      prettier: prettierPlugin,
+      prettier: prettierPlugin
     },
     rules: {
       '@typescript-eslint/explicit-function-return-type': 'warn',
@@ -50,9 +51,9 @@ export default tseslint.config(
       'prettier/prettier': [
         'error',
         {
-          endOfLine: 'auto',
-        },
-      ],
-    },
+          endOfLine: 'auto'
+        }
+      ]
+    }
   }
 );

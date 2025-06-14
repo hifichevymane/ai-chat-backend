@@ -9,9 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
-    "migration:generate": "typeorm-ts-node-esm migration:generate -p -d ./src/database/index.ts",
-    "migration:run": "typeorm-ts-node-esm migration:run",
-    "migration:revert": "typeorm-ts-node-esm migration:revert"
+    "migration:generate": "typeorm-ts-node-esm migration:generate -d src/database/data-source.ts",
+    "migration:run": "typeorm-ts-node-esm migration:run -d src/database/data-source.ts",
+    "migration:revert": "typeorm-ts-node-esm migration:revert -d src/database/data-source.ts"
   },
   "type": "module",
   "keywords": [],
@@ -22,15 +22,19 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.0",
     "ollama": "^0.5.16",
     "pg": "^8.16.0",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.24"
+    "typeorm": "^0.3.24",
+    "typeorm-naming-strategies": "^4.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/morgan": "^1.9.10",
     "@types/node": "^24.0.1",
     "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "^8.34.0",
