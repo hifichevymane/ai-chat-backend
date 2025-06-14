@@ -3,9 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  ManyToOne
+  ManyToOne,
+  Relation
 } from 'typeorm';
-import { Chat } from './chat';
+import { Chat } from './chat.ts';
 
 export enum Role {
   USER = 'user',
@@ -18,8 +19,8 @@ export class ChatMessage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Chat, (chat) => chat.messages)
-  chat: Chat;
+  @ManyToOne(() => Chat, (chat) => chat.messages, { onDelete: 'CASCADE' })
+  chat: Relation<Chat>;
 
   @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;

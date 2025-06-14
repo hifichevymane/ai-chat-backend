@@ -4,9 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany
+  OneToMany,
+  Relation
 } from 'typeorm';
-import { ChatMessage } from './chat-message';
+import { ChatMessage } from './chat-message.ts';
 
 @Entity('chats')
 export class Chat {
@@ -16,8 +17,10 @@ export class Chat {
   @Column('varchar', { length: 64 })
   title: string;
 
-  @OneToMany(() => ChatMessage, (chatMessage) => chatMessage.chat)
-  messages: ChatMessage[];
+  @OneToMany(() => ChatMessage, (chatMessage) => chatMessage.chat, {
+    onDelete: 'CASCADE'
+  })
+  messages: Relation<ChatMessage[]>;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
