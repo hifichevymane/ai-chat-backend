@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 import { getRepository } from '../database';
-import { ChatMessage } from '../entities/ChatMessage';
+import { ChatMessage, Role } from '../entities/ChatMessage';
 import { Chat } from '../entities/Chat';
 
 export class ChatMessageService {
@@ -10,12 +10,13 @@ export class ChatMessageService {
 
   public async createAndInsertMessage(
     chatId: string,
-    content: string
+    content: string,
+    role: Role = Role.USER
   ): Promise<ChatMessage> {
     const chat = await this.chatRepository.findOneBy({ id: chatId });
     if (!chat) throw new Error(`The chat with id ${chatId} doesn't exist`);
 
-    const message = this.chatMessageRepository.create({ chat, content });
+    const message = this.chatMessageRepository.create({ chat, content, role });
     await this.chatMessageRepository.insert(message);
     return message;
   }
