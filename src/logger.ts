@@ -1,7 +1,7 @@
 // @deno-types="@types/express"
 import { NextFunction, Request, Response } from 'express';
 
-const logger = (req: Request, res: Response, next: NextFunction) => {
+const logger = (req: Request, res: Response, next: NextFunction): void => {
   const start = Date.now();
 
   res.on('finish', () => {
@@ -21,7 +21,7 @@ const logger = (req: Request, res: Response, next: NextFunction) => {
 
     log(
       `%c[${timestamp}] [${logLevel.toUpperCase()}] ${req.method} ${req.url} ${statusCode} - ${duration}ms`,
-      `color: ${logColor}`,
+      `color: ${logColor}`
     );
   });
 
