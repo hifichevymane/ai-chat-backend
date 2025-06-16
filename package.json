@@ -18,17 +18,18 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
+  "prisma": {
+    "schema": "src/database/prisma/schema.prisma"
+  },
   "dependencies": {
+    "@prisma/client": "6.9.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
     "ollama": "^0.5.16",
-    "pg": "^8.16.0",
-    "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.24",
-    "typeorm-naming-strategies": "^4.1.0"
+    "pg": "^8.16.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
@@ -42,6 +43,7 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
     "prettier": "^3.5.3",
+    "prisma": "^6.9.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.2",
     "typescript": "^5.8.3",

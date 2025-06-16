@@ -130,3 +130,9 @@ dist
 .pnp.*
 
 .DS_Store
+
+/src/database/prisma/src/generated/prisma
+
+/generated/prisma
+
+/prisma/src/generated/prisma

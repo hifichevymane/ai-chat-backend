@@ -1,5 +1,3 @@
-import 'reflect-metadata';
-
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,7 +7,6 @@ import { Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { initializeDatabase } from './database';
 
 import { LLMService } from './services';
 
@@ -18,7 +15,6 @@ import routes from './routes';
 let server: Server;
 const main = async (): Promise<void> => {
   try {
-    await initializeDatabase();
     // Load the llm model
     const llmService = new LLMService();
     const isLoaded = await llmService.loadModel();
