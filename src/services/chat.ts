@@ -1,28 +1,57 @@
-import { Repository } from 'typeorm';
-import { getRepository } from '../database';
-import { Chat } from '../entities/chat';
+import { prisma } from '../database';
+import {
+  type Chat,
+  type ChatMessage,
+  ChatMessageRoleEnum
+} from '../database/prisma/src/generated/prisma';
+
+type ChatWithMessages = Chat & {
+  chatMessages: ChatMessage[];
+};
 
 export class ChatService {
-  private readonly chatRepository: Repository<Chat> = getRepository(Chat);
-
   public getAllChats(): Promise<Chat[]> {
-    return this.chatRepository.find({
-      order: { createdAt: 'DESC' }
+    return prisma.chat.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
     });
   }
 
-  public getChatById(id: string): Promise<Chat | null> {
-    return this.chatRepository.findOne({
+  public getChatById(id: string): Promise<ChatWithMessages | null> {
+    return prisma.chat.findUnique({
       where: { id },
-      relations: { messages: true }
+      include: {
+        chatMessages: true
+      }
     });
   }
 
-  public async createAndInsertEmptyChat(): Promise<Chat> {
-    const chat = this.chatRepository.create({
-      title: 'New Chat'
+  public createAndInsertEmptyChat(): Promise<Chat> {
+    return prisma.chat.create({
+      data: {
+        title: 'New Chat'
+      }
     });
-    await this.chatRepository.insert(chat);
-    return chat;
+  }
+
+  public async createAndInsertMessage(
+    chatId: string,
+    content: string,
+    role: ChatMessageRoleEnum = ChatMessageRoleEnum.user
+  ): Promise<ChatMessage> {
+    const chat = await prisma.chat.findUnique({
+      where: { id: chatId }
+    });
+
+    if (!chat) throw new Error(`The chat with id ${chatId} doesn't exist`);
+
+    return await prisma.chatMessage.create({
+      data: {
+        content,
+        role,
+        chatId
+      }
+    });
   }
 }

@@ -1,9 +1,14 @@
 import ollama from 'ollama';
-import { ChatMessageDTO, Role } from '../entities/chat-message.ts';
-import { AbortableAsyncIterator, ChatResponse } from 'ollama';
+import type { ChatResponse, AbortableAsyncIterator } from 'ollama';
+import { ChatMessageRoleEnum } from '../database/prisma/src/generated/prisma';
+
+interface ChatMessageDTO {
+  role: ChatMessageRoleEnum;
+  content: string;
+}
 
 interface LLMResponse {
-  role: Role.ASSISTANT;
+  role: ChatMessageRoleEnum;
   content: string;
 }
 
@@ -33,7 +38,7 @@ export class LLMService {
   ): Promise<AbortableAsyncIterator<ChatResponse>> {
     const messages: ChatMessageDTO[] = [
       ...context,
-      { role: Role.USER, content: prompt }
+      { role: ChatMessageRoleEnum.user, content: prompt }
     ];
 
     return ollama.chat({
@@ -44,6 +49,6 @@ export class LLMService {
   }
 
   public responseFromChunks(chunks: string[]): LLMResponse {
-    return { role: Role.ASSISTANT, content: chunks.join('') };
+    return { role: ChatMessageRoleEnum.assistant, content: chunks.join('') };
   }
 }

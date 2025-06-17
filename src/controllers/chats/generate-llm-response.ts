@@ -1,5 +1,5 @@
-import { Request, Response } from 'express';
-import { LLMService, ChatService, ChatMessageService } from '../../services';
+import type { Request, Response } from 'express';
+import { LLMService, ChatService } from '../../services';
 
 type EmptyObject = Record<string | number | symbol, never>;
 
@@ -41,13 +41,12 @@ export const generateLLMResponse = async (
     }
 
     const { prompt } = req.body;
-    const chatMessageService = new ChatMessageService();
-    await chatMessageService.createAndInsertMessage(currentChat.id, prompt);
+    await chatService.createAndInsertMessage(currentChat.id, prompt);
 
     const llmService = new LLMService();
     const stream = await llmService.streamPromptResponse(
       prompt,
-      currentChat.messages
+      currentChat.chatMessages
     );
 
     const responseChunks = [];
@@ -57,11 +56,7 @@ export const generateLLMResponse = async (
     }
 
     const { content, role } = llmService.responseFromChunks(responseChunks);
-    await chatMessageService.createAndInsertMessage(
-      currentChat.id,
-      content,
-      role
-    );
+    await chatService.createAndInsertMessage(currentChat.id, content, role);
 
     res.end();
   } catch (err) {
