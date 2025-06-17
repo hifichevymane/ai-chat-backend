@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { ChatService } from '../../services';
 
 export const list = async (_: Request, res: Response): Promise<void> => {

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { LLMService, ChatService } from '../../services';
 
 type EmptyObject = Record<string | number | symbol, never>;
@@ -46,10 +46,7 @@ export const generateLLMResponse = async (
     const llmService = new LLMService();
     const stream = await llmService.streamPromptResponse(
       prompt,
-      currentChat.chat_messages.map((msg) => ({
-        role: msg.role,
-        content: msg.content
-      }))
+      currentChat.chatMessages
     );
 
     const responseChunks = [];

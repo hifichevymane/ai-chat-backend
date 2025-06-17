@@ -2,8 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { Server } from 'http';
-import express from 'express';
-import { Response } from 'express';
+import express, { type Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
