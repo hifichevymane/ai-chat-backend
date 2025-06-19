@@ -9,9 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
-    "migration:generate": "typeorm-ts-node-esm migration:generate -d src/database/data-source.ts",
-    "migration:run": "typeorm-ts-node-esm migration:run -d src/database/data-source.ts",
-    "migration:revert": "typeorm-ts-node-esm migration:revert -d src/database/data-source.ts"
+    "db:deploy": "prisma migrate dev && prisma generate"
   },
   "type": "module",
   "keywords": [],

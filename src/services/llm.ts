@@ -1,4 +1,4 @@
-import ollama from 'ollama';
+import { Ollama } from 'ollama';
 import type { ChatResponse, AbortableAsyncIterator } from 'ollama';
 import { ChatMessageRoleEnum } from '../database/prisma/src/generated/prisma';
 
@@ -11,6 +11,10 @@ interface LLMResponse {
   role: ChatMessageRoleEnum;
   content: string;
 }
+
+const ollama = new Ollama({
+  host: `http://${process.env.OLLAMA_HOST}:${process.env.OLLAMA_PORT}`
+});
 
 export class LLMService {
   public async loadModel(): Promise<boolean> {
