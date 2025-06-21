@@ -1,0 +1,114 @@
+# AI Chat Backend
+
+## Main Technologies Used
+- **Node.js** (v22.x)
+- **TypeScript**
+- **pnpm** (package manager)
+- **PostgreSQL**
+- **Ollama** (LLM integration)
+- **Docker & Docker Compose**
+- **Express.js**
+- **Prisma ORM**
+- **ESLint & Prettier** (code quality)
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
+```bash
+git clone <repo-url>
+cd ai-chat-backend
+```
+
+### 2. Install dependencies
+Make sure you have [pnpm](https://pnpm.io/) installed:
+```bash
+pnpm install
+```
+
+### 3. Set up environment variables
+Create a `.env` file in the root directory with the following variables:
+```env
+APP_PORT=<port that will used to start the server>
+FRONTEND_ALLOWED_URL=<frontend app allowed url>
+
+OLLAMA_HOST=<host where ollama server will run>
+OLLAMA_PORT=<port where ollama server will run>
+MODEL_ID=<ollama llm model id>
+
+DB_NAME=<database name>
+DB_USER=<database user name>
+DB_PASSWORD=<database user password>
+DB_PORT=<database port>
+DATABASE_URL=<database connection string for ORM>
+```
+Adjust values as needed for your setup.
+
+By default the values are:
+```env
+APP_PORT=3000
+FRONTEND_ALLOWED_URL=http://localhost:5173
+
+OLLAMA_HOST=ollama
+OLLAMA_PORT=11434
+MODEL_ID=llama3.2:latest
+
+DB_NAME=ai_chat
+DB_USER=postgres
+DB_PASSWORD=12345
+DB_PORT=5432
+DATABASE_URL="postgresql://postgres:12345@postgres-db:5432/ai_chat?schema=public"
+```
+
+### 4. Start the Ollama server
+Make sure you have [Ollama](https://ollama.com/) installed locally. In a separate terminal, run:
+```bash
+ollama serve
+```
+This will start the Ollama LLM server required by the backend.
+
+### 5. Set up the database
+Make sure you have PostgreSQL running and the credentials match your `.env` file.
+Run migrations and generate Prisma client:
+```bash
+pnpm run db:deploy
+```
+
+### 6. Start the application
+```bash
+pnpm run dev
+```
+The server will start on `http://localhost:3000` by default.
+
+---
+
+## Running with Docker
+
+### 1. Build and start all services
+```bash
+docker-compose up --build
+```
+This will start:
+- The backend app
+- PostgreSQL database
+- Ollama LLM service
+
+Ports will be gotten from `.env` file
+
+### 2. Environment variables
+Docker Compose will use the `.env` file in the root directory. Make sure it is set up as described above.
+
+### 3. Access
+- API: `http://localhost:3000/api`
+- Health check: `http://localhost:3000/api/health-check`
+
+---
+
+## Useful Scripts
+- `pnpm run dev` — Start the backend in development mode
+- `pnpm run db:deploy` — Run database migrations and generate Prisma client
+- `pnpm run lint` — Lint the codebase
+- `pnpm run format` — Format the codebase
+
+---
