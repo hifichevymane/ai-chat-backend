@@ -10,7 +10,8 @@
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
     "db:deploy": "prisma migrate dev && prisma generate",
-    "docker": "docker-compose up --build"
+    "docker": "docker-compose up --build",
+    "prisma-studio": "prisma studio"
   },
   "type": "module",
   "keywords": [],

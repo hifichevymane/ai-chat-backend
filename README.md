@@ -81,6 +81,11 @@ pnpm dev
 ```
 The server will start on `http://localhost:3000` by default.
 
+### 7. Run [Prisma Studio Web UI](https://www.prisma.io/docs/orm/tools/prisma-studio)
+```bash
+pnpm prisma-studio
+```
+
 ---
 
 ## Running with Docker
@@ -93,6 +98,7 @@ This will start:
 - The backend app
 - PostgreSQL database
 - Ollama LLM service
+- Prisma Studio Web UI
 
 Ports will be gotten from `.env` file
 
@@ -110,5 +116,6 @@ Docker Compose will use the `.env` file in the root directory. Make sure it is s
 - `pnpm db:deploy` — Run database migrations and generate Prisma client
 - `pnpm lint` — Lint the codebase
 - `pnpm format` — Format the codebase
+- `pnpm prisma-studio` - Run Prisma Studio Web UI to inspect models in the database
 
 ---
