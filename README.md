@@ -87,7 +87,7 @@ The server will start on `http://localhost:3000` by default.
 
 ### 1. Build and start all services
 ```bash
-docker-compose up --build
+pnpm run docker
 ```
 This will start:
 - The backend app
