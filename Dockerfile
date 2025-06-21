@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 8000
 
 # Start in dev mode
-CMD ["sh", "-c", "pnpm run db:deploy && pnpm run dev"]
+CMD ["sh", "-c", "pnpm db:deploy && pnpm dev"]
