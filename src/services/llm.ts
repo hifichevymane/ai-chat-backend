@@ -1,3 +1,4 @@
+import ora from 'ora';
 import { Ollama } from 'ollama';
 import type { ChatResponse, AbortableAsyncIterator } from 'ollama';
 import { ChatMessageRoleEnum } from '../database/prisma/src/generated/prisma';
@@ -23,8 +24,28 @@ export class LLMService {
   }
 
   private async pullModel(model: string): Promise<boolean> {
-    const { status } = await ollama.pull({ model });
-    return status === 'success';
+    const spinner = ora(`Pulling model "${model}" from Ollama...`).start();
+    try {
+      const progressStream = await ollama.pull({ model, stream: true });
+
+      for await (const progress of progressStream) {
+        if (progress.status) {
+          spinner.text = `Pulling model "${model}": ${progress.status}`;
+        }
+        if (progress.completed && progress.total) {
+          const percent = ((progress.completed / progress.total) * 100).toFixed(
+            2
+          );
+          spinner.text = `Pulling model "${model}": ${percent}%`;
+        }
+      }
+
+      spinner.succeed(`Model "${model}" pulled successfully!`);
+      return true;
+    } catch (error) {
+      spinner.fail(`Error pulling model "${model}": ${error}`);
+      return false;
+    }
   }
 
   public async loadModel(modelId: string): Promise<boolean> {
@@ -33,7 +54,7 @@ export class LLMService {
       console.warn(`WARNING: Model ${modelId} is not pulled, pulling...`);
       const isPulled = await this.pullModel(modelId);
       if (!isPulled) {
-        throw new Error(`Failed to pull model ${modelId}`);
+        throw new Error(`ERROR: Failed to pull model ${modelId}`);
       } else {
         console.log(`SUCCESS: Model ${modelId} has been pulled successfully!`);
       }
