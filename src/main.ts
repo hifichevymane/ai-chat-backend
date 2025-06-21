@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { Server } from 'http';
-import express, { type Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -32,9 +32,6 @@ function setupServer(): Server {
   app.use(express.urlencoded({ extended: true }));
 
   app.use('/api', routes);
-  app.get('/api/health-check', (_, res: Response) => {
-    res.json({ code: 200, status: 'OK' });
-  });
 
   const port = Number(process.env.APP_PORT) || 8000;
   const server = app.listen(port, () => {
