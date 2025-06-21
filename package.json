@@ -1,10 +1,9 @@
 {
   "name": "ai-chat-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend for an AI chat application using Express, Prisma, and PostgreSQL.",
   "main": "dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/main.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -14,8 +13,21 @@
     "prisma-studio": "prisma studio"
   },
   "type": "module",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "ai",
+    "chat",
+    "backend",
+    "express",
+    "prisma",
+    "postgresql",
+    "ollama",
+    "typescript"
+  ],
+  "author": "Maksym Rumu(hifichevymane)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hifichevymane/ai-chat-backend.git"
+  },
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
   "prisma": {
