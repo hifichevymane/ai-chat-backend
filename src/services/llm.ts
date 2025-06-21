@@ -17,9 +17,30 @@ const ollama = new Ollama({
 });
 
 export class LLMService {
-  public async loadModel(): Promise<boolean> {
+  private async isModelPulled(modelId: string): Promise<boolean> {
+    const { models } = await ollama.list();
+    return models.some(({ model }) => model === modelId);
+  }
+
+  private async pullModel(model: string): Promise<boolean> {
+    const { status } = await ollama.pull({ model });
+    return status === 'success';
+  }
+
+  public async loadModel(modelId: string): Promise<boolean> {
+    const isModelPulled = await this.isModelPulled(modelId);
+    if (!isModelPulled) {
+      console.warn(`WARNING: Model ${modelId} is not pulled, pulling...`);
+      const isPulled = await this.pullModel(modelId);
+      if (!isPulled) {
+        throw new Error(`Failed to pull model ${modelId}`);
+      } else {
+        console.log(`SUCCESS: Model ${modelId} has been pulled successfully!`);
+      }
+    }
+
     const { done } = await ollama.generate({
-      model: process.env.MODEL_ID,
+      model: modelId,
       prompt: ''
     });
 

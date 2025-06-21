@@ -16,7 +16,7 @@ const main = async (): Promise<void> => {
   try {
     // Load the llm model
     const llmService = new LLMService();
-    const isLoaded = await llmService.loadModel();
+    const isLoaded = await llmService.loadModel(process.env.MODEL_ID);
     if (isLoaded) {
       console.log('LLM model has been loaded successfully!');
     } else {

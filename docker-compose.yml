@@ -38,8 +38,6 @@ services:
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
-    entrypoint: ["sh", "-c"]
-    command: "ollama serve && ollama pull llama:3.2"
     env_file:
       - .env
     ports:
