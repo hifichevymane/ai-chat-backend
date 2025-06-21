@@ -47,6 +47,19 @@ services:
     networks:
       - backend
 
+  prisma-studio:
+    build: .
+    container_name: prisma-studio
+    env_file:
+      - .env
+    command: pnpm prisma studio --port 5555 --browser none
+    ports:
+      - "5555:5555"
+    depends_on:
+      - db
+    networks:
+      - backend
+
 volumes:
   db_data:
   ollama_data:
