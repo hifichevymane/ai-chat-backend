@@ -7,84 +7,55 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 
-import { LLMService } from './services';
-
 import routes from './routes';
 
-let server: Server;
-const main = async (): Promise<void> => {
-  try {
-    // Load the llm model
-    const llmService = new LLMService(process.env.MODEL_ID);
-    console.log(`Loading LLM model "${process.env.MODEL_ID}"...`);
-    const isLoaded = await llmService.loadModel();
-    if (isLoaded) {
-      console.log(
-        `LLM model "${process.env.MODEL_ID}" has been loaded successfully!`
-      );
-    } else {
-      throw new Error(
-        `Error while loading LLM model "${process.env.MODEL_ID}"`
-      );
-    }
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+import { loadLLM, unloadLLM } from './llm-lifecycle';
 
-  const APP_PORT = Number(process.env.APP_PORT) || 8000;
+async function main(): Promise<void> {
+  await loadLLM();
+  const server = setupServer();
+  addShutdownHandlers(server);
+}
 
+main().catch((err: unknown) => {
+  console.error(err);
+  process.exit(1);
+});
+
+function setupServer(): Server {
   const app = express();
 
-  const corsOptions: cors.CorsOptions = {
-    origin: process.env.FRONTEND_ALLOWED_URL
-  };
-
-  app.use(cors(corsOptions));
+  app.use(cors({ origin: process.env.FRONTEND_ALLOWED_URL }));
   app.use(helmet());
-  app.use(morgan('dev'));
+  app.use(morgan('common'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use('/api', routes);
 
+  app.use('/api', routes);
   app.get('/api/health-check', (_, res: Response) => {
     res.json({ code: 200, status: 'OK' });
   });
 
-  server = app.listen(APP_PORT, () => {
-    console.log(`Server is running on ${APP_PORT} port`);
+  const port = Number(process.env.APP_PORT) || 8000;
+  const server = app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
   });
-};
-await main();
 
-const gracefulShutdown = async (): Promise<void> => {
-  try {
-    // Unload the model
-    const llmService = new LLMService(process.env.MODEL_ID);
-    const isUnloaded = await llmService.unloadModel();
-    if (isUnloaded) {
-      console.log('LLM model has been unloaded successfully!');
-    } else {
-      throw new Error('Error while unloading LLM model');
-    }
+  return server;
+}
 
+function addShutdownHandlers(server: Server): void {
+  const handler = (): void => {
     server.close(() => {
       console.debug('HTTP server is closed...');
     });
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
 
-const shutdownHandler = (): void => {
-  gracefulShutdown().catch((err: unknown) => {
-    if (err instanceof Error) {
+    unloadLLM().catch((err: unknown) => {
       console.error('Error during graceful shutdown:', err);
-    }
-    process.exit(1);
-  });
-};
+      process.exit(1);
+    });
+  };
 
-process.on('SIGTERM', shutdownHandler);
-process.on('SIGINT', shutdownHandler);
+  process.on('SIGTERM', handler);
+  process.on('SIGINT', handler);
+}
