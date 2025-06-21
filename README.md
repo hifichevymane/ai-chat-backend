@@ -1,15 +1,15 @@
 # AI Chat Backend
 
 ## Main Technologies Used
-- **Node.js** (v22.x)
-- **TypeScript**
-- **pnpm** (package manager)
-- **PostgreSQL**
-- **Ollama** (LLM integration)
-- **Docker & Docker Compose**
-- **Express.js**
-- **Prisma ORM**
-- **ESLint & Prettier** (code quality)
+- [**Node.js** (v22.x)](https://nodejs.org/)
+- [**TypeScript**](https://www.typescriptlang.org/)
+- [**pnpm** (package manager)](https://pnpm.io/)
+- [**PostgreSQL**](https://www.postgresql.org/)
+- [**Ollama** (LLM integration)](https://ollama.com/)
+- [**Docker & Docker Compose**](https://www.docker.com/)
+- [**Express.js**](https://expressjs.com/)
+- [**Prisma ORM**](https://www.prisma.io/)
+- [**ESLint & Prettier** (code quality)](https://eslint.org/) ([Prettier](https://prettier.io/))
 
 ---
 
