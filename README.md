@@ -72,12 +72,12 @@ This will start the Ollama LLM server required by the backend.
 Make sure you have PostgreSQL running and the credentials match your `.env` file.
 Run migrations and generate Prisma client:
 ```bash
-pnpm run db:deploy
+pnpm db:deploy
 ```
 
 ### 6. Start the application
 ```bash
-pnpm run dev
+pnpm dev
 ```
 The server will start on `http://localhost:3000` by default.
 
@@ -87,7 +87,7 @@ The server will start on `http://localhost:3000` by default.
 
 ### 1. Build and start all services
 ```bash
-pnpm run docker
+pnpm docker
 ```
 This will start:
 - The backend app
@@ -106,9 +106,9 @@ Docker Compose will use the `.env` file in the root directory. Make sure it is s
 ---
 
 ## Useful Scripts
-- `pnpm run dev` — Start the backend in development mode
-- `pnpm run db:deploy` — Run database migrations and generate Prisma client
-- `pnpm run lint` — Lint the codebase
-- `pnpm run format` — Format the codebase
+- `pnpm dev` — Start the backend in development mode
+- `pnpm db:deploy` — Run database migrations and generate Prisma client
+- `pnpm lint` — Lint the codebase
+- `pnpm format` — Format the codebase
 
 ---
