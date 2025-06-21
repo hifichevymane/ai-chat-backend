@@ -9,6 +9,7 @@ declare namespace NodeJS {
     DB_USERNAME?: string;
     DB_PASSWORD?: string;
     DB_DATABASE: string;
-    JWT_SECRET: string;
+    OLLAMA_HOST: string;
+    OLLAMA_PORT: string;
   }
 }

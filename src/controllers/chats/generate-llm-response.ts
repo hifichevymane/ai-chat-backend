@@ -43,7 +43,7 @@ export const generateLLMResponse = async (
     const { prompt } = req.body;
     await chatService.createAndInsertMessage(currentChat.id, prompt);
 
-    const llmService = new LLMService();
+    const llmService = new LLMService(process.env.MODEL_ID);
     const stream = await llmService.streamPromptResponse(
       prompt,
       currentChat.chatMessages
