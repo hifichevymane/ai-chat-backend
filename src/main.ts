@@ -15,12 +15,17 @@ let server: Server;
 const main = async (): Promise<void> => {
   try {
     // Load the llm model
-    const llmService = new LLMService();
-    const isLoaded = await llmService.loadModel(process.env.MODEL_ID);
+    const llmService = new LLMService(process.env.MODEL_ID);
+    console.log(`Loading LLM model "${process.env.MODEL_ID}"...`);
+    const isLoaded = await llmService.loadModel();
     if (isLoaded) {
-      console.log('LLM model has been loaded successfully!');
+      console.log(
+        `LLM model "${process.env.MODEL_ID}" has been loaded successfully!`
+      );
     } else {
-      throw new Error('Error while loading LLM model');
+      throw new Error(
+        `Error while loading LLM model "${process.env.MODEL_ID}"`
+      );
     }
   } catch (err) {
     console.error(err);
@@ -55,7 +60,7 @@ await main();
 const gracefulShutdown = async (): Promise<void> => {
   try {
     // Unload the model
-    const llmService = new LLMService();
+    const llmService = new LLMService(process.env.MODEL_ID);
     const isUnloaded = await llmService.unloadModel();
     if (isUnloaded) {
       console.log('LLM model has been unloaded successfully!');

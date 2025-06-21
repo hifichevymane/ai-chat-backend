@@ -18,50 +18,63 @@ const ollama = new Ollama({
 });
 
 export class LLMService {
-  private async isModelPulled(modelId: string): Promise<boolean> {
-    const { models } = await ollama.list();
-    return models.some(({ model }) => model === modelId);
+  private modelId: string;
+
+  constructor(modelId: string) {
+    this.modelId = modelId;
   }
 
-  private async pullModel(model: string): Promise<boolean> {
-    const spinner = ora(`Pulling model "${model}" from Ollama...`).start();
+  private async isModelPulled(): Promise<boolean> {
+    const { models } = await ollama.list();
+    return models.some(({ model }) => model === this.modelId);
+  }
+
+  private async pullModel(): Promise<boolean> {
+    const spinner = ora(
+      `Pulling model "${this.modelId}" from Ollama...`
+    ).start();
     try {
-      const progressStream = await ollama.pull({ model, stream: true });
+      const progressStream = await ollama.pull({
+        model: this.modelId,
+        stream: true
+      });
 
       for await (const progress of progressStream) {
         if (progress.status) {
-          spinner.text = `Pulling model "${model}": ${progress.status}`;
+          spinner.text = `Pulling model "${this.modelId}": ${progress.status}`;
         }
         if (progress.completed && progress.total) {
           const percent = ((progress.completed / progress.total) * 100).toFixed(
             2
           );
-          spinner.text = `Pulling model "${model}": ${percent}%`;
+          spinner.text = `Pulling model "${this.modelId}": ${percent}%`;
         }
       }
 
-      spinner.succeed(`Model "${model}" pulled successfully!`);
+      spinner.succeed(`Model "${this.modelId}" pulled successfully!`);
       return true;
     } catch (error) {
-      spinner.fail(`Error pulling model "${model}": ${error}`);
+      spinner.fail(`Error pulling model "${this.modelId}": ${error}`);
       return false;
     }
   }
 
-  public async loadModel(modelId: string): Promise<boolean> {
-    const isModelPulled = await this.isModelPulled(modelId);
+  public async loadModel(): Promise<boolean> {
+    const isModelPulled = await this.isModelPulled();
     if (!isModelPulled) {
-      console.warn(`WARNING: Model ${modelId} is not pulled, pulling...`);
-      const isPulled = await this.pullModel(modelId);
+      console.warn(`WARNING: Model ${this.modelId} is not pulled, pulling...`);
+      const isPulled = await this.pullModel();
       if (!isPulled) {
-        throw new Error(`ERROR: Failed to pull model ${modelId}`);
+        throw new Error(`ERROR: Failed to pull model ${this.modelId}`);
       } else {
-        console.log(`SUCCESS: Model ${modelId} has been pulled successfully!`);
+        console.log(
+          `SUCCESS: Model ${this.modelId} has been pulled successfully!`
+        );
       }
     }
 
     const { done } = await ollama.generate({
-      model: modelId,
+      model: this.modelId,
       prompt: ''
     });
 
@@ -70,7 +83,7 @@ export class LLMService {
 
   public async unloadModel(): Promise<boolean> {
     const { done } = await ollama.generate({
-      model: process.env.MODEL_ID,
+      model: this.modelId,
       prompt: '',
       keep_alive: 0
     });
@@ -88,7 +101,7 @@ export class LLMService {
     ];
 
     return ollama.chat({
-      model: process.env.MODEL_ID,
+      model: this.modelId,
       messages,
       stream: true
     });
