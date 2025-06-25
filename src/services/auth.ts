@@ -21,4 +21,21 @@ export class AuthService {
 
     return newUser;
   }
+
+  public async login(email: string, password: string): Promise<User> {
+    const user = await prisma.user.findUnique({
+      where: { email }
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      throw new Error('Invalid password');
+    }
+
+    return user;
+  }
 }
