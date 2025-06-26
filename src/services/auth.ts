@@ -1,8 +1,16 @@
 import bcrypt from 'bcryptjs';
-import type { User } from '../database/prisma/src/generated/prisma';
-import { prisma } from '../database';
+
 import type { Secret, SignOptions } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
+
+import passport from 'passport';
+import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
+import type { StrategyOptions } from 'passport-jwt';
+
+import type { User } from '../database/prisma/src/generated/prisma';
+import { prisma } from '../database';
+
+import { UserService } from './user';
 
 export class AuthService {
   public async login(email: string, password: string): Promise<User> {
@@ -30,5 +38,30 @@ export class AuthService {
     const payload = { sub: userId, email };
     const token = jwt.sign(payload, secret, { expiresIn } as SignOptions);
     return token;
+  }
+
+  public static useJWTStrategy(): void {
+    const opts: StrategyOptions = {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.JWT_SECRET
+    };
+
+    passport.use(
+      new JwtStrategy(opts, (jwt_payload: { sub: string }, done) => {
+        const userService = new UserService();
+        userService
+          .findUserById(jwt_payload.sub)
+          .then((user) => {
+            if (user) {
+              done(null, user);
+            } else {
+              done(null, false);
+            }
+          })
+          .catch((err: unknown) => {
+            done(err, false);
+          });
+      })
+    );
   }
 }

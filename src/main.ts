@@ -6,6 +6,8 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import passport from 'passport';
+import { AuthService } from './services/auth';
 
 import routes from './routes';
 
@@ -30,6 +32,9 @@ function setupServer(): Server {
   app.use(morgan('common'));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+
+  AuthService.useJWTStrategy();
+  app.use(passport.initialize());
 
   app.use('/api', routes);
 
