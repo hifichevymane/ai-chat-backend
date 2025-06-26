@@ -11,7 +11,7 @@ export const createUserMessage = async (
     const { message } = req.body as { message: string };
 
     const chatService = new ChatService();
-    const chatMessage = await chatService.createAndInsertMessage(
+    const chatMessage = await chatService.createMessage(
       id,
       message,
       ChatMessageRoleEnum.user

@@ -1,10 +1,11 @@
 import type { Request, Response } from 'express';
 import { ChatService } from '../../services';
 
-export const create = async (_: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const chatService = new ChatService();
-    const chat = await chatService.createAndInsertEmptyChat();
+    const userId = (req.user as { id: string }).id;
+    const chat = await chatService.createEmptyChat(userId);
     res.status(201).json(chat);
   } catch (err) {
     console.error(err);

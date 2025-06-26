@@ -8,7 +8,8 @@ export const generateLLMResponse = async (
   try {
     const chatService = new ChatService();
     const { id } = req.params;
-    const currentChat = await chatService.getChatById(id);
+    const userId = req.user.id;
+    const currentChat = await chatService.getChatById(id, userId);
 
     if (!currentChat) {
       res.status(404).json({ message: `The chat with id ${id} was not found` });
@@ -33,7 +34,7 @@ export const generateLLMResponse = async (
     }
 
     const { content, role } = llmService.responseFromChunks(responseChunks);
-    await chatService.createAndInsertMessage(currentChat.id, content, role);
+    await chatService.createMessage(currentChat.id, content, role);
 
     res.end();
   } catch (err) {
