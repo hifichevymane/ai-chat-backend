@@ -1,27 +1,10 @@
 import bcrypt from 'bcryptjs';
 import type { User } from '../database/prisma/src/generated/prisma';
 import { prisma } from '../database';
-
-interface CreateUserDTO {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-}
+import type { Secret, SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export class AuthService {
-  public async createUser(user: CreateUserDTO): Promise<User> {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    const newUser = await prisma.user.create({
-      data: {
-        ...user,
-        password: hashedPassword
-      }
-    });
-
-    return newUser;
-  }
-
   public async login(email: string, password: string): Promise<User> {
     const user = await prisma.user.findUnique({
       where: { email }
@@ -37,5 +20,15 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  public generateToken(userId: string, email: string): string {
+    const secret = process.env.JWT_SECRET as Secret;
+    if (!secret) throw new Error('JWT secret not set');
+
+    const expiresIn = process.env.JWT_EXPIRES_IN || '24h';
+    const payload = { sub: userId, email };
+    const token = jwt.sign(payload, secret, { expiresIn } as SignOptions);
+    return token;
   }
 }

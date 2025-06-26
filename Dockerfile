@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Copy package files and install deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the code
 COPY . .
