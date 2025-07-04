@@ -18,24 +18,28 @@ export class ChatService {
     });
   }
 
-  public getChatById(id: string): Promise<ChatWithMessages | null> {
+  public getChatById(
+    id: string,
+    userId: string
+  ): Promise<ChatWithMessages | null> {
     return prisma.chat.findUnique({
-      where: { id },
+      where: { id, userId },
       include: {
         chatMessages: true
       }
     });
   }
 
-  public createAndInsertEmptyChat(): Promise<Chat> {
+  public createEmptyChat(userId: string): Promise<Chat> {
     return prisma.chat.create({
       data: {
-        title: 'New Chat'
+        title: 'New Chat',
+        user: { connect: { id: userId } }
       }
     });
   }
 
-  public async createAndInsertMessage(
+  public async createMessage(
     chatId: string,
     content: string,
     role: ChatMessageRoleEnum = ChatMessageRoleEnum.user
