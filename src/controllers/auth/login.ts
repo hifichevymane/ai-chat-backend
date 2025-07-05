@@ -1,9 +1,17 @@
 import type { Request, Response } from 'express';
 import { AuthService } from '../../services';
 
-export const login = async (req: Request, res: Response): Promise<void> => {
+interface LoginRequestBody {
+  email: string;
+  password: string;
+}
+
+export const login = async (
+  req: Request<unknown, unknown, LoginRequestBody>,
+  res: Response
+): Promise<void> => {
   try {
-    const { email, password } = req.body as { email: string; password: string };
+    const { email, password } = req.body;
     const authService = new AuthService();
     const user = await authService.login(email, password);
     const token = authService.generateToken(user.id, user.email);

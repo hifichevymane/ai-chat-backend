@@ -1,9 +1,16 @@
 import type { Request, Response } from 'express';
 import { AuthService } from '../../services';
 
-export const verify = async (req: Request, res: Response): Promise<void> => {
+interface VerifyRequestBody {
+  token: string;
+}
+
+export const verify = async (
+  req: Request<unknown, unknown, VerifyRequestBody>,
+  res: Response
+): Promise<void> => {
   try {
-    const { token } = req.body as { token: string };
+    const { token } = req.body;
 
     if (!token) {
       res.status(400).json({ message: 'Token is required' });
