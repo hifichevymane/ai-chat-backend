@@ -7,7 +7,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
-import { AuthService } from './services/auth';
+import { AuthService } from './services';
 
 import routes from './routes';
 
