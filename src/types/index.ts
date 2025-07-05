@@ -1,7 +1,8 @@
 import type {
   User,
   Chat,
-  ChatMessage
+  ChatMessage,
+  JwtBlacklist
 } from '../database/prisma/src/generated/prisma';
 
-export type { User, Chat, ChatMessage };
+export type { User, Chat, ChatMessage, JwtBlacklist };
