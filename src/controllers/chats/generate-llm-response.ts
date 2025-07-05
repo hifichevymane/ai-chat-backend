@@ -6,9 +6,13 @@ export const generateLLMResponse = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  if (!req.user) {
+    throw new HttpError(401, 'Unauthorized');
+  }
+
   const chatService = new ChatService();
   const { id } = req.params;
-  const userId = (req.user as { id: string }).id;
+  const userId = req.user.id;
   const currentChat = await chatService.getChatById(id, userId);
 
   if (!currentChat) {
@@ -33,7 +37,8 @@ export const generateLLMResponse = async (
   }
 
   const { content, role } = llmService.responseFromChunks(responseChunks);
-  await chatService.createMessage(currentChat.id, content, role);
+  const messageContent = { content, role };
+  await chatService.createMessage(currentChat.id, userId, messageContent);
 
   res.end();
 };

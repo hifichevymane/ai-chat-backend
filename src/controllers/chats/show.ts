@@ -3,9 +3,13 @@ import { ChatService } from '../../services';
 import { HttpError } from '../http-error';
 
 export const show = async (req: Request, res: Response): Promise<void> => {
+  if (!req.user) {
+    throw new HttpError(401, 'Unauthorized');
+  }
+
   const { id } = req.params;
   const chatService = new ChatService();
-  const userId = (req.user as { id: string }).id;
+  const userId = req.user.id;
   const chat = await chatService.getChatById(id, userId);
 
   if (!chat) {
