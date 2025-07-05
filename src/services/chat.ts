@@ -1,8 +1,5 @@
 import { prisma } from '../database';
-import type {
-  Chat,
-  ChatMessage
-} from '../database/prisma/src/generated/prisma';
+import type { Chat, ChatMessage } from '../types';
 
 type ChatWithMessages = Chat & {
   chatMessages: ChatMessage[];

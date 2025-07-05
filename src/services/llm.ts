@@ -1,7 +1,7 @@
 import ora from 'ora';
 import { Ollama } from 'ollama';
 import type { ChatResponse, AbortableAsyncIterator } from 'ollama';
-import { ChatMessageRoleEnum } from '../database/prisma/src/generated/prisma';
+import { ChatMessageRoleEnum } from '../enums';
 
 interface ChatMessageDTO {
   role: ChatMessageRoleEnum;

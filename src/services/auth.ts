@@ -1,16 +1,14 @@
 import bcrypt from 'bcryptjs';
-
 import type { Secret, SignOptions } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
-
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import type { StrategyOptions } from 'passport-jwt';
 
-import type { User } from '../database/prisma/src/generated/prisma';
 import { prisma } from '../database';
-
 import { UserService } from './user';
+
+import type { StrategyOptions } from 'passport-jwt';
+import type { User } from '../types';
 
 export class AuthService {
   public async login(email: string, password: string): Promise<User> {

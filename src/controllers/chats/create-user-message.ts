@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { ChatService } from '../../services';
-import { ChatMessageRoleEnum } from '../../database/prisma/src/generated/prisma';
+import { ChatMessageRoleEnum } from '../../enums';
 import { HttpError } from '../http-error';
 
 interface CreateUserMessageParams {
