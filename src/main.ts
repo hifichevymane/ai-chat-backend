@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
 import { AuthService } from './services';
+import { errorHandler } from './middlewares/error-handler';
 
 import routes from './routes';
 
@@ -37,6 +38,8 @@ function setupServer(): Server {
   app.use(passport.initialize());
 
   app.use('/api', routes);
+
+  app.use(errorHandler);
 
   const port = Number(process.env.APP_PORT) || 8000;
   const server = app.listen(port, () => {
