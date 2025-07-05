@@ -1,13 +1,11 @@
 import { prisma } from '../database';
-import {
-  type Chat,
-  type ChatMessage,
-  ChatMessageRoleEnum
-} from '../database/prisma/src/generated/prisma';
+import type { Chat, ChatMessage } from '../types';
 
 type ChatWithMessages = Chat & {
   chatMessages: ChatMessage[];
 };
+
+type MessageDTO = Pick<ChatMessage, 'content' | 'role'>;
 
 export class ChatService {
   public getAllChats(): Promise<Chat[]> {
@@ -41,20 +39,19 @@ export class ChatService {
 
   public async createMessage(
     chatId: string,
-    content: string,
-    role: ChatMessageRoleEnum = ChatMessageRoleEnum.user
+    userId: string,
+    message: MessageDTO
   ): Promise<ChatMessage> {
     const chat = await prisma.chat.findUnique({
-      where: { id: chatId }
+      where: { id: chatId, userId }
     });
 
     if (!chat) throw new Error(`The chat with id ${chatId} doesn't exist`);
 
     return await prisma.chatMessage.create({
       data: {
-        content,
-        role,
-        chatId
+        chatId,
+        ...message
       }
     });
   }

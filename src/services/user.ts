@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { prisma } from '../database';
-import type { User } from '../database/prisma/src/generated/prisma';
+import type { User } from '../types';
 
 interface CreateUserDTO {
   email: string;

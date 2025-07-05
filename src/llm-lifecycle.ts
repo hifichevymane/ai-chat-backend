@@ -1,15 +1,16 @@
 import { LLMService } from './services';
 
-const llmService = new LLMService(process.env.MODEL_ID);
+const MODEL_ID = process.env.MODEL_ID;
+const llmService = new LLMService(MODEL_ID);
 
 export const loadLLM = async (): Promise<void> => {
-  console.log(`Loading LLM model "${process.env.MODEL_ID}"...`);
+  console.log(`Loading LLM model "${MODEL_ID}"...`);
   const isLoaded = await llmService.loadModel();
   if (!isLoaded) {
-    throw new Error(`Error while loading LLM model "${process.env.MODEL_ID}"`);
+    throw new Error(`Error while loading LLM model "${MODEL_ID}"`);
   }
 
-  console.log(`LLM model "${process.env.MODEL_ID}" loaded successfully!`);
+  console.log(`LLM model "${MODEL_ID}" loaded successfully!`);
 };
 
 export const unloadLLM = async (): Promise<void> => {
