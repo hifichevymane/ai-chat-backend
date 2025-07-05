@@ -8,7 +8,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
 import { AuthService } from './services';
-import { errorHandler } from './middlewares/error-handler';
+import { errorHandler } from './middlewares';
 
 import routes from './routes';
 

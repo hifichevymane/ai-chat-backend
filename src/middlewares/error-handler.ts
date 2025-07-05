@@ -1,7 +1,17 @@
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { HttpError } from '../controllers/http-error';
 
-export const errorHandler = (err: Error, _: Request, res: Response): void => {
+export const errorHandler = (
+  err: Error,
+  _: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (res.headersSent) {
+    next(err);
+    return;
+  }
+
   if (err instanceof HttpError) {
     res.status(err.statusCode).json({ message: err.message });
   } else {
