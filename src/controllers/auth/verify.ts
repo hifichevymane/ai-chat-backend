@@ -17,11 +17,11 @@ export const verify = async (
   }
 
   const authService = new AuthService();
-  const isTokenValid = await authService.verifyJWT(token);
+  const valid = await authService.verifyJWT(token);
 
-  if (!isTokenValid) {
+  if (!valid) {
     throw new HttpError(401, 'Unauthorized');
   }
 
-  res.status(200).json({ isTokenValid });
+  res.status(200).json({ valid });
 };
