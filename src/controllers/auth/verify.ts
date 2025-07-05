@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import { AuthService } from '../../services';
+import { HttpError } from '../http-error';
 
 interface VerifyRequestBody {
   token: string;
@@ -9,25 +10,18 @@ export const verify = async (
   req: Request<unknown, unknown, VerifyRequestBody>,
   res: Response
 ): Promise<void> => {
-  try {
-    const { token } = req.body;
+  const { token } = req.body;
 
-    if (!token) {
-      res.status(400).json({ message: 'Token is required' });
-      return;
-    }
-
-    const authService = new AuthService();
-    const isTokenValid = await authService.verifyJWT(token);
-
-    if (!isTokenValid) {
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
-    }
-
-    res.status(200);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+  if (!token) {
+    throw new HttpError(400, 'Token is required');
   }
+
+  const authService = new AuthService();
+  const isTokenValid = await authService.verifyJWT(token);
+
+  if (!isTokenValid) {
+    throw new HttpError(401, 'Unauthorized');
+  }
+
+  res.status(200);
 };

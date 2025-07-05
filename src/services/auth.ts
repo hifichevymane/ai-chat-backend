@@ -14,23 +14,25 @@ import { UserService } from './user';
 
 export class AuthService {
   public async login(email: string, password: string): Promise<User> {
+    const error = new Error('Invalid email or password');
+
     const user = await prisma.user.findUnique({
       where: { email }
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw error;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new Error('Invalid password');
+      throw error;
     }
 
     return user;
   }
 
-  public generateToken(userId: string, email: string): string {
+  public generateJWT(userId: string, email: string): string {
     const secret = process.env.JWT_SECRET as Secret;
     if (!secret) throw new Error('JWT secret not set');
 
