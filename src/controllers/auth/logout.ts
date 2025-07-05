@@ -11,5 +11,5 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   const authService = new AuthService();
   await authService.blacklistJWT(token);
 
-  res.status(200).end();
+  res.status(204).end();
 };
