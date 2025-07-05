@@ -40,6 +40,15 @@ export class AuthService {
     return token;
   }
 
+  public async verifyJWT(token: string): Promise<boolean> {
+    const secret = process.env.JWT_SECRET as Secret;
+    if (!secret) throw new Error('JWT secret not set');
+
+    const decoded = jwt.verify(token, secret) as { sub: string; email: string };
+    const user = await prisma.user.findFirst({ where: { id: decoded.sub } });
+    return !!user;
+  }
+
   public static useJWTStrategy(): void {
     const opts: StrategyOptions = {
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
