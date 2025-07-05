@@ -37,15 +37,7 @@ export class AuthService {
     const secretKey = new TextEncoder().encode(secret);
 
     const expiresIn = process.env.JWT_EXPIRES_IN || '24h';
-    // jose expects seconds for expiration
-    let expSeconds = 24 * 60 * 60; // default 24h
-    if (expiresIn.endsWith('h')) {
-      expSeconds = parseInt(expiresIn) * 60 * 60;
-    } else if (expiresIn.endsWith('m')) {
-      expSeconds = parseInt(expiresIn) * 60;
-    } else if (expiresIn.endsWith('s')) {
-      expSeconds = parseInt(expiresIn);
-    }
+    const expSeconds = this.generateExpirationTimeInSeconds(expiresIn);
     const now = Math.floor(Date.now() / 1000);
 
     const { id, email, firstName, lastName } = payload;
@@ -97,5 +89,18 @@ export class AuthService {
           });
       })
     );
+  }
+
+  private generateExpirationTimeInSeconds(expiresIn: string): number {
+    let expSeconds = 24 * 60 * 60; // default 24h
+    if (expiresIn.endsWith('h')) {
+      expSeconds = parseInt(expiresIn) * 60 * 60;
+    } else if (expiresIn.endsWith('m')) {
+      expSeconds = parseInt(expiresIn) * 60;
+    } else if (expiresIn.endsWith('s')) {
+      expSeconds = parseInt(expiresIn);
+    }
+
+    return expSeconds;
   }
 }
