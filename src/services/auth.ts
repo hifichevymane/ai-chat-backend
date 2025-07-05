@@ -45,6 +45,7 @@ export class AuthService {
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
       .setIssuedAt(now)
       .setExpirationTime(now + expSeconds)
+      .setJti(crypto.randomUUID())
       .sign(secretKey);
 
     return token;
@@ -73,22 +74,61 @@ export class AuthService {
     };
 
     passport.use(
-      new JwtStrategy(opts, (jwt_payload: { sub: string }, done) => {
-        const userService = new UserService();
-        userService
-          .findUserById(jwt_payload.sub)
-          .then((user) => {
-            if (user) {
-              done(null, user);
-            } else {
-              done(null, false);
+      new JwtStrategy(
+        opts,
+        (jwt_payload: { sub: string; jti: string }, done) => {
+          void (async (): Promise<void> => {
+            try {
+              // Check if the jti is blacklisted
+              const authService = new AuthService();
+              const isBlacklisted = await authService.isTokenBlacklisted(
+                jwt_payload.sub,
+                jwt_payload.jti
+              );
+
+              if (isBlacklisted) {
+                done(null, false);
+                return;
+              }
+
+              const userService = new UserService();
+              const user = await userService.findUserById(jwt_payload.sub);
+              if (user) {
+                done(null, user);
+              } else {
+                done(null, false);
+              }
+            } catch (err) {
+              done(err, false);
             }
-          })
-          .catch((err: unknown) => {
-            done(err, false);
-          });
-      })
+          })();
+        }
+      )
     );
+  }
+
+  public async blacklistJWT(token: string): Promise<boolean> {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error('JWT secret not set');
+
+    const secretKey = new TextEncoder().encode(secret);
+    const { payload } = await jwtVerify(token, secretKey);
+    const userId = typeof payload.sub === 'string' ? payload.sub : undefined;
+
+    if (!userId) return false;
+
+    const { jti, exp } = payload;
+
+    if (!jti || !exp) throw new Error('Token missing jti or exp');
+
+    const isBlacklisted = await this.isTokenBlacklisted(userId, jti);
+    if (isBlacklisted) return false;
+
+    const blacklistedToken = await prisma.jwtBlacklist.create({
+      data: { userId, jti, expiresAt: new Date(exp * 1000) }
+    });
+
+    return !!blacklistedToken;
   }
 
   private generateExpirationTimeInSeconds(expiresIn: string): number {
@@ -102,5 +142,15 @@ export class AuthService {
     }
 
     return expSeconds;
+  }
+
+  private async isTokenBlacklisted(
+    userId: string,
+    jti: string
+  ): Promise<boolean> {
+    const existingBlacklistedToken = await prisma.jwtBlacklist.findFirst({
+      where: { userId, jti }
+    });
+    return !!existingBlacklistedToken;
   }
 }
