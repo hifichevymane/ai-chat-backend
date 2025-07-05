@@ -23,5 +23,5 @@ export const verify = async (
     throw new HttpError(401, 'Unauthorized');
   }
 
-  res.status(200);
+  res.status(200).json({ isTokenValid });
 };

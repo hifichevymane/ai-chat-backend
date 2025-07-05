@@ -16,7 +16,15 @@ export const login = async (
 
     const authService = new AuthService();
     const user = await authService.login(email, password);
-    const token = authService.generateJWT(user.id, user.email);
+
+    const { id, firstName, lastName } = user;
+    const token = await authService.generateJWT({
+      id,
+      email,
+      firstName,
+      lastName
+    });
+
     res.status(200).json({ token });
   } catch (err: unknown) {
     if (err instanceof Error && err.message === 'Invalid email or password') {
