@@ -47,6 +47,9 @@ importers:
       pg:
         specifier: ^8.16.2
         version: 8.16.2
+      zod:
+        specifier: ^3.25.74
+        version: 3.25.74
     devDependencies:
       '@eslint/js':
         specifier: ^9.29.0
@@ -1472,6 +1475,9 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zod@3.25.74:
+    resolution: {integrity: sha512-J8poo92VuhKjNknViHRAIuuN6li/EwFbAC8OedzI8uxpEPGiXHGQu9wemIAioIpqgfB4SySaJhdk0mH5Y4ICBg==}
+
 snapshots:
 
   '@cspotcode/source-map-support@0.8.1':
@@ -2810,3 +2816,5 @@ snapshots:
   yn@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zod@3.25.74: {}
