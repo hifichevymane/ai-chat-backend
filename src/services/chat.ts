@@ -8,8 +8,11 @@ type ChatWithMessages = Chat & {
 type MessageDTO = Pick<ChatMessage, 'content' | 'role'>;
 
 export class ChatService {
-  public getAllChats(): Promise<Chat[]> {
+  public getAllChats(userId: string): Promise<Chat[]> {
     return prisma.chat.findMany({
+      where: {
+        userId
+      },
       orderBy: {
         createdAt: 'desc'
       }
