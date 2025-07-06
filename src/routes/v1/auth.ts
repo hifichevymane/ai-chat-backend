@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { login, verify, logout } from '../../controllers/auth';
-import { validateBody } from '../../middlewares/validate';
+import { validateBody } from '../../middlewares';
 import {
   loginBodySchema,
   verifyBodySchema

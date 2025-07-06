@@ -2,17 +2,17 @@ import type { Request, Response } from 'express';
 import { ChatService } from '../../services';
 import { ChatMessageRoleEnum } from '../../enums';
 import { HttpError } from '../http-error';
-
-interface CreateUserMessageParams {
-  id: string;
-}
-
-interface CreateUserMessageBody {
-  message: string;
-}
+import type {
+  CreateUserMessageRequestParams,
+  CreateUserMessageRequestBody
+} from './schemas';
 
 export const createUserMessage = async (
-  req: Request<CreateUserMessageParams, unknown, CreateUserMessageBody>,
+  req: Request<
+    CreateUserMessageRequestParams,
+    unknown,
+    CreateUserMessageRequestBody
+  >,
   res: Response
 ): Promise<void> => {
   if (!req.user) {

@@ -1,9 +1,10 @@
 import type { Request, Response } from 'express';
 import { LLMService, ChatService } from '../../services';
 import { HttpError } from '../http-error';
+import type { GenerateLLMResponseRequestParams } from './schemas';
 
 export const generateLLMResponse = async (
-  req: Request,
+  req: Request<GenerateLLMResponseRequestParams>,
   res: Response
 ): Promise<void> => {
   if (!req.user) {
