@@ -1,10 +1,7 @@
 import type { Request, Response } from 'express';
 import { AuthService } from '../../services';
 import { HttpError } from '../http-error';
-
-interface VerifyRequestBody {
-  token: string;
-}
+import type { VerifyRequestBody } from './schemas';
 
 export const verify = async (
   req: Request<unknown, unknown, VerifyRequestBody>,

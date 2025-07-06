@@ -1,11 +1,7 @@
 import type { Request, Response } from 'express';
 import { AuthService } from '../../services';
 import { HttpError } from '../http-error';
-
-interface LoginRequestBody {
-  email: string;
-  password: string;
-}
+import type { LoginRequestBody } from './schemas';
 
 export const login = async (
   req: Request<unknown, unknown, LoginRequestBody>,

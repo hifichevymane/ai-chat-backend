@@ -1,8 +1,12 @@
 import type { Request, Response } from 'express';
 import { ChatService } from '../../services';
 import { HttpError } from '../http-error';
+import type { ShowRequestParams } from './schemas';
 
-export const show = async (req: Request, res: Response): Promise<void> => {
+export const show = async (
+  req: Request<ShowRequestParams>,
+  res: Response
+): Promise<void> => {
   if (!req.user) {
     throw new HttpError(401, 'Unauthorized');
   }
