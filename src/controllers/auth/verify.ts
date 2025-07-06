@@ -9,10 +9,6 @@ export const verify = async (
 ): Promise<void> => {
   const { token } = req.body;
 
-  if (!token) {
-    throw new HttpError(400, 'Token is required');
-  }
-
   const authService = new AuthService();
   const valid = await authService.verifyJWT(token);
 
