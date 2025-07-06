@@ -1,10 +1,12 @@
 export class HttpError extends Error {
   constructor(
-    public readonly status: number,
-    public readonly message: string
+    public status: number,
+    public message: string,
+    public errors?: string[]
   ) {
     super(message);
     this.status = status;
+    this.errors = errors;
     Object.setPrototypeOf(this, HttpError.prototype);
   }
 }
