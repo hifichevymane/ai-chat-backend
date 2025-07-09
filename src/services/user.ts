@@ -15,40 +15,86 @@ interface UpdateUserDTO {
   lastName?: string;
 }
 
+type UserWithoutPassword = Omit<User, 'password'>;
+
 export class UserService {
-  public async createUser(user: CreateUserDTO): Promise<User> {
+  public async createUser(user: CreateUserDTO): Promise<UserWithoutPassword> {
     const hashedPassword = await bcrypt.hash(user.password, 10);
     const newUser = await prisma.user.create({
       data: {
         ...user,
         password: hashedPassword
+      },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        createdAt: true,
+        updatedAt: true
       }
     });
+
     return newUser;
   }
 
-  public findUserByEmail(email: string): Promise<User | null> {
+  public findUserByEmail(email: string): Promise<UserWithoutPassword | null> {
     return prisma.user.findUnique({
-      where: { email }
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        createdAt: true,
+        updatedAt: true
+      }
     });
   }
 
-  public findUserById(id: string): Promise<User | null> {
+  public findUserById(id: string): Promise<UserWithoutPassword | null> {
     return prisma.user.findUnique({
-      where: { id }
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        createdAt: true,
+        updatedAt: true
+      }
     });
   }
 
-  public deleteUser(id: string): Promise<User> {
+  public deleteUser(id: string): Promise<UserWithoutPassword> {
     return prisma.user.delete({
-      where: { id }
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        createdAt: true,
+        updatedAt: true
+      }
     });
   }
 
-  public updateUser(id: string, user: UpdateUserDTO): Promise<User> {
+  public updateUser(
+    id: string,
+    user: UpdateUserDTO
+  ): Promise<UserWithoutPassword> {
     return prisma.user.update({
       where: { id },
-      data: user
+      data: user,
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        createdAt: true,
+        updatedAt: true
+      }
     });
   }
 }
