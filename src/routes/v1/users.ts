@@ -21,7 +21,7 @@ router.get(
   show
 );
 
-router.put(
+router.patch(
   '/:id',
   [
     authenticateJWT,
