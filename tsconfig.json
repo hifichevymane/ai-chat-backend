@@ -12,17 +12,15 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
     "strictPropertyInitialization": false,
     "typeRoots": ["./node_modules/@types", "./types"],
     "types": ["node"],
-	"moduleDetection": "force",
-	// Allow JS files to be imported from TS and vice versa
-	"allowJs": true,
-	// Disallow features that require cross-file awareness
-	"isolatedModules": true,
-    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    // Allow JS files to be imported from TS and vice versa
+    "allowJs": true,
+    // Disallow features that require cross-file awareness
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

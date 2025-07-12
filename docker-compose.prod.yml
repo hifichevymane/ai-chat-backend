@@ -1,0 +1,68 @@
+name: ai-chat-backend-prod
+services:
+  # Production app service
+  app:
+    build:
+      context: .
+      target: production
+    container_name: ai-chat-server-prod
+    env_file:
+      - .env
+    ports:
+      - '${APP_PORT}:3000'
+    depends_on:
+      - db
+      - ollama
+    networks:
+      - backend
+
+  db:
+    image: postgres:16-alpine
+    container_name: postgres-db-prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '${DB_PORT}:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-prod
+    env_file:
+      - .env
+    ports:
+      - '${OLLAMA_PORT}:11434'
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-prod
+    depends_on:
+      - app
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - backend
+
+volumes:
+  db_data:
+  ollama_data:
+
+networks:
+  backend:
