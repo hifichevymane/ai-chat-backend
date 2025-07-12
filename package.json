@@ -4,9 +4,7 @@
   "description": "Backend for an AI chat application using Express, Prisma, and PostgreSQL.",
   "main": "dist/main.js",
   "scripts": {
-    "build": "tsc",
-    "postbuild": "tsc-esm-fix",
-    "start": "node dist/main.js",
+    "start": "pnpm dlx tsx src/main.ts",
     "dev": "tsx watch src/main.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
@@ -67,7 +65,6 @@
     "prettier": "^3.5.3",
     "prisma": "^6.10.1",
     "ts-node": "^10.9.2",
-    "tsc-esm-fix": "^3.1.2",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.34.1"

@@ -5,12 +5,14 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable pnpm
 
+RUN apk update
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY . .
 RUN pnpm install --frozen-lockfile
-RUN pnpm run build
 
 # --- Development image ---
 FROM builder AS development
@@ -23,17 +25,18 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable pnpm
 
+RUN apk update
+RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/pnpm-workspace.yaml ./
-
-RUN pnpm install --frozen-lockfile --prod=true
-
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/src ./src
 COPY --from=builder /app/prisma ./prisma
 
-EXPOSE 3000
+RUN pnpm install --frozen-lockfile --prod=true
 
 CMD ["sh", "-c", "pnpm db:migrate:prod && pnpm start"]
