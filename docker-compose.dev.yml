@@ -1,11 +1,14 @@
+name: ai-chat-backend-dev
 services:
   app:
-    build: .
-    container_name: ai-chat-backend
+    build:
+      context: .
+      target: development
+    container_name: ai-chat-server-dev
     env_file:
       - .env
     ports:
-      - "${APP_PORT}:3000"
+      - '${APP_PORT}:3000'
     depends_on:
       - db
       - ollama
@@ -17,19 +20,19 @@ services:
 
   db:
     image: postgres:16-alpine
-    container_name: postgres-db
+    container_name: postgres-db-dev
     restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER}']
       interval: 5s
       timeout: 5s
       retries: 5
     ports:
-      - "${DB_PORT}:5432"
+      - '${DB_PORT}:5432'
     volumes:
       - db_data:/var/lib/postgresql/data
     networks:
@@ -37,24 +40,26 @@ services:
 
   ollama:
     image: ollama/ollama:latest
-    container_name: ollama
+    container_name: ollama-dev
     env_file:
       - .env
     ports:
-      - "${OLLAMA_PORT}:11434"
+      - '${OLLAMA_PORT}:11434'
     volumes:
       - ollama_data:/root/.ollama
     networks:
       - backend
 
   prisma-studio:
-    build: .
-    container_name: prisma-studio
+    build:
+      context: .
+      target: development
+    container_name: prisma-studio-dev
     env_file:
       - .env
     command: pnpm prisma studio --port 5555 --browser none
     ports:
-      - "5555:5555"
+      - '5555:5555'
     depends_on:
       - db
     networks:

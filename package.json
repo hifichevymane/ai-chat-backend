@@ -4,13 +4,16 @@
   "description": "Backend for an AI chat application using Express, Prisma, and PostgreSQL.",
   "main": "dist/main.js",
   "scripts": {
+    "start": "pnpm dlx tsx src/main.ts",
     "dev": "tsx watch src/main.ts",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
+    "prisma-studio": "prisma studio",
     "format": "prettier --write .",
-    "db:deploy": "prisma migrate dev && prisma generate",
-    "docker": "docker-compose up --build",
-    "prisma-studio": "prisma studio"
+    "db:migrate:dev": "prisma migrate dev && prisma generate",
+    "db:migrate:prod": "pnpm dlx prisma migrate deploy && pnpm dlx prisma generate",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up --build -d"
   },
   "type": "module",
   "keywords": [
@@ -29,10 +32,7 @@
     "url": "https://github.com/hifichevymane/ai-chat-backend.git"
   },
   "license": "ISC",
-  "packageManager": "pnpm@10.12.1",
-  "prisma": {
-    "schema": "src/database/prisma/schema.prisma"
-  },
+  "packageManager": "pnpm@10.13.1",
   "dependencies": {
     "@prisma/client": "^6.10.1",
     "bcryptjs": "^3.0.2",

@@ -3,6 +3,6 @@ import type {
   Chat,
   ChatMessage,
   JwtBlacklist
-} from '../database/prisma/src/generated/prisma';
+} from '../../prisma/src/generated/prisma';
 
 export type { User, Chat, ChatMessage, JwtBlacklist };

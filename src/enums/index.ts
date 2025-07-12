@@ -1,3 +1,3 @@
-import { ChatMessageRoleEnum } from '../database/prisma/src/generated/prisma';
+import { ChatMessageRoleEnum } from '../../prisma/src/generated/prisma';
 
 export { ChatMessageRoleEnum };
