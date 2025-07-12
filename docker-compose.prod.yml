@@ -8,8 +8,6 @@ services:
     container_name: ai-chat-server-prod
     env_file:
       - .env
-    ports:
-      - '${APP_PORT}:3000'
     depends_on:
       - db
       - ollama
