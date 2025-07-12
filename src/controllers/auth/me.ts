@@ -6,7 +6,5 @@ export const me = (req: Request, res: Response): void => {
     throw new HttpError(401, 'Unauthorized');
   }
 
-  const { user } = req;
-  console.log(user);
-  res.json(user);
+  res.json(req.user);
 };
