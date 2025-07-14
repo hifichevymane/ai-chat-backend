@@ -6,7 +6,8 @@
   "scripts": {
     "start": "pnpm dlx tsx src/main.ts",
     "dev": "tsx watch src/main.ts",
-    "test": "vitest",
+    "test": "vitest --run",
+    "test:watch": "vitest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "prisma-studio": "prisma studio",
