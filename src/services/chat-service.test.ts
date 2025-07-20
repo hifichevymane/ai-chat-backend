@@ -150,5 +150,20 @@ describe('ChatService', () => {
         }
       });
     });
+
+    it('should throw an error if the chat does not exist', async () => {
+      chatService.getChatById = vi.fn().mockResolvedValue(null);
+
+      const chatId = faker.string.uuid();
+      const userId = faker.string.uuid();
+      const messageDTO = {
+        content: faker.lorem.sentence(),
+        role: ChatMessageRoleEnum.user
+      };
+
+      await expect(
+        chatService.createMessage(chatId, userId, messageDTO)
+      ).rejects.toThrowError(`The chat with id ${chatId} doesn't exist`);
+    });
   });
 });
