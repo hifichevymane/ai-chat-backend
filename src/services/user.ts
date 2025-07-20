@@ -19,6 +19,11 @@ type UserWithoutPassword = Omit<User, 'password'>;
 
 export class UserService {
   public async createUser(user: CreateUserDTO): Promise<UserWithoutPassword> {
+    const existingUser = await this.findUserByEmail(user.email);
+    if (existingUser) {
+      throw new Error('Email already taken');
+    }
+
     const hashedPassword = await bcrypt.hash(user.password, 10);
     const newUser = await prisma.user.create({
       data: {

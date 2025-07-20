@@ -46,6 +46,7 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/unbound-method': 'off',
       semi: ['error', 'always'],
       quotes: ['error', 'single'],
       'prettier/prettier': [
