@@ -45,10 +45,7 @@ export class ChatService {
     userId: string,
     message: MessageDTO
   ): Promise<ChatMessage> {
-    const chat = await prisma.chat.findUnique({
-      where: { id: chatId, userId }
-    });
-
+    const chat = await this.getChatById(chatId, userId);
     if (!chat) throw new Error(`The chat with id ${chatId} doesn't exist`);
 
     return await prisma.chatMessage.create({
