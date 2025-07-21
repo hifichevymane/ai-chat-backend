@@ -90,7 +90,13 @@ Run migrations and generate Prisma client:
 pnpm db:migrate:dev
 ```
 
-### 6. Start the application
+### 6. Seed the database
+
+```bash
+pnpm db:seed
+```
+
+### 7. Start the application
 
 ```bash
 pnpm dev
@@ -180,6 +186,7 @@ Docker Compose will use the `.env` file in the root directory. Make sure it is s
 - `pnpm dev` — Start the backend in development mode
 - `pnpm db:migrate:dev` — Run database migrations and generate Prisma client in Development environment
 - `pnpm db:migrate:prod` - Run database migrations and generate Prisma client in Production environment
+- `pnpm db:seed` - Run seed script to populate the database
 - `pnpm lint` — Lint the codebase
 - `pnpm format` — Format the codebase
 - `pnpm prisma-studio` - Run Prisma Studio Web UI to inspect models in the database
