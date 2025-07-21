@@ -12,6 +12,7 @@
 - [**Prisma ORM**](https://www.prisma.io/)
 - [**ESLint & Prettier** (code quality)](https://eslint.org/) ([Prettier](https://prettier.io/))
 - [**nginx**](https://nginx.org/) - Used in Production Docker container
+- [**Vitest**](https://vitest.dev/)
 
 ---
 
@@ -103,6 +104,18 @@ The server will start on `http://localhost:3000` by default.
 pnpm prisma-studio
 ```
 
+### 8. Run tests
+
+```bash
+pnpm test
+```
+
+or
+
+```bash
+pnpm test:watch
+```
+
 ---
 
 ## Running with Docker in Development mode
@@ -172,5 +185,7 @@ Docker Compose will use the `.env` file in the root directory. Make sure it is s
 - `pnpm prisma-studio` - Run Prisma Studio Web UI to inspect models in the database
 - `pnpm docker:dev` - Run development Docker container
 - `pnpm docker:prod` - Run production Docker container
+- `pnpm test` - Run tests once
+- `pnpm test:watch` - Run tests in the watch mode
 
 ---
