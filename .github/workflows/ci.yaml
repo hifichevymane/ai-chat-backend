@@ -26,6 +26,7 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+        working-directory: .
 
       - name: Run tests
         run: pnpm test:coverage
