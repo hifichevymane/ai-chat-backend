@@ -24,7 +24,7 @@ export default tseslint.config(
     '.eslintrc.*',
     '.prettierrc.*',
     'coverage',
-    'src/database/prisma'
+    'prisma'
   ]),
   {
     languageOptions: {
