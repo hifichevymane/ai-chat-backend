@@ -37,7 +37,7 @@ describe('UserService', () => {
 
   describe('createUser', () => {
     it('should create a user', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
       (vi.spyOn(bcrypt, 'hash') as any).mockResolvedValue(hashedPassword);
 
       prisma.user.create.mockImplementation((args) => {
@@ -50,7 +50,7 @@ describe('UserService', () => {
           updatedAt: true
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
         return userOutput as any;
       });
 
@@ -94,7 +94,7 @@ describe('UserService', () => {
           updatedAt: true
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
         return userOutput as any;
       });
 
@@ -144,7 +144,7 @@ describe('UserService', () => {
           updatedAt: true
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
         return userOutput as any;
       });
 
@@ -194,7 +194,7 @@ describe('UserService', () => {
           updatedAt: true
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
         return userOutput as any;
       });
 
@@ -226,7 +226,7 @@ describe('UserService', () => {
           updatedAt: true
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-explicit-any
         return userOutput as any;
       });
 
