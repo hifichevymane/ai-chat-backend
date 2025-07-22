@@ -194,5 +194,7 @@ Docker Compose will use the `.env` file in the root directory. Make sure it is s
 - `pnpm docker:prod` - Run production Docker container
 - `pnpm test` - Run tests once
 - `pnpm test:watch` - Run tests in the watch mode
+- `pnpm test:coverage` - Display test coverage
+- `pnpm test:ui` - Run vitest ui
 
 ---
