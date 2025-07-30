@@ -13,15 +13,17 @@ export const login = async (
     const authService = new AuthService();
     const user = await authService.login(email, password);
 
-    const { id, firstName, lastName } = user;
-    const token = await authService.generateJWT({
-      id,
-      email,
-      firstName,
-      lastName
-    });
+    const accessToken = await authService.generateJWT(user);
+    const { token: refreshToken, tokenExpirationTime } =
+      await authService.generateRefreshJWT(user);
 
-    res.status(200).json({ token });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: tokenExpirationTime * 1000
+    });
+    res.status(200).json({ accessToken });
   } catch (err: unknown) {
     if (err instanceof Error && err.message === 'Invalid email or password') {
       throw new HttpError(401, err.message);

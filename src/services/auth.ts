@@ -51,6 +51,34 @@ export class AuthService {
     return token;
   }
 
+  public async generateRefreshJWT(payload: UserDTO): Promise<{
+    token: string;
+    tokenExpirationTime: number;
+  }> {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error('JWT secret not set');
+    if (!process.env.JWT_REFRESH_EXPIRES_IN) {
+      throw new Error('JWT_REFRESH_EXPIRES_IN is not set');
+    }
+
+    const secretKey = new TextEncoder().encode(secret);
+    const expiresIn = process.env.JWT_REFRESH_EXPIRES_IN;
+    const expSeconds = this.generateExpirationTimeInSeconds(expiresIn);
+
+    const { id, email, firstName, lastName } = payload;
+
+    const now = Math.floor(Date.now() / 1000);
+    const tokenExpirationTime = now + expSeconds;
+    const token = await new SignJWT({ sub: id, email, firstName, lastName })
+      .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+      .setIssuedAt(now)
+      .setExpirationTime(tokenExpirationTime)
+      .setJti(crypto.randomUUID())
+      .sign(secretKey);
+
+    return { token, tokenExpirationTime };
+  }
+
   public async verifyJWT(token: string): Promise<boolean> {
     const secret = process.env.JWT_SECRET;
     if (!secret) throw new Error('JWT secret not set');
@@ -142,7 +170,10 @@ export class AuthService {
 
   private generateExpirationTimeInSeconds(expiresIn: string): number {
     let expSeconds = 24 * 60 * 60; // default 24h
-    if (expiresIn.endsWith('h')) {
+
+    if (expiresIn.endsWith('d')) {
+      expSeconds = parseInt(expiresIn) * 24 * 60 * 60;
+    } else if (expiresIn.endsWith('h')) {
       expSeconds = parseInt(expiresIn) * 60 * 60;
     } else if (expiresIn.endsWith('m')) {
       expSeconds = parseInt(expiresIn) * 60;
