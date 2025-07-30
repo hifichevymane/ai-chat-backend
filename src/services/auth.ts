@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import passport from 'passport';
 import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import { jwtVerify, SignJWT } from 'jose';
+import { jwtVerify, SignJWT, type JWTPayload } from 'jose';
 
 import { prisma } from '../database';
 import { UserService } from './user';
@@ -57,7 +57,7 @@ export class AuthService {
 
     const secretKey = new TextEncoder().encode(secret);
     try {
-      const { payload } = await jwtVerify(token, secretKey);
+      const { payload } = await jwtVerify<UserDTO>(token, secretKey);
       const userId = typeof payload.sub === 'string' ? payload.sub : undefined;
       if (!userId) return false;
       const user = await prisma.user.findFirst({ where: { id: userId } });
@@ -65,6 +65,15 @@ export class AuthService {
     } catch {
       return false;
     }
+  }
+
+  public async getPayload(token: string): Promise<UserDTO & JWTPayload> {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error('JWT secret not set');
+
+    const secretKey = new TextEncoder().encode(secret);
+    const { payload } = await jwtVerify<UserDTO>(token, secretKey);
+    return payload;
   }
 
   public static useJWTStrategy(): void {
@@ -144,7 +153,7 @@ export class AuthService {
     return expSeconds;
   }
 
-  private async isTokenBlacklisted(
+  public async isTokenBlacklisted(
     userId: string,
     jti: string
   ): Promise<boolean> {
