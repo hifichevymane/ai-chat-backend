@@ -65,7 +65,7 @@ export const authenticateJWTCookie: RequestHandler = async (
 
     req.user = user;
     next();
-  } catch {
-    next(new HttpError(401, 'Unauthorized'));
+  } catch (error) {
+    next(error);
   }
 };
