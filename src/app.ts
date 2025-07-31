@@ -18,7 +18,12 @@ if (!process.env.COOKIE_SECRET) {
   throw new Error('COOKIE_SECRET is not set');
 }
 
-app.use(cors({ origin: process.env.FRONTEND_ALLOWED_URL }));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_ALLOWED_URL,
+    credentials: true
+  })
+);
 app.use(helmet());
 app.use(morgan('common'));
 app.use(express.json());

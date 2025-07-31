@@ -34,9 +34,10 @@ export const authenticateJWTCookie: RequestHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  const accessToken = (req.cookies as Record<string, string | undefined>)
-    .accessToken;
-  if (!accessToken) {
+  const refreshToken = (req.signedCookies as Record<string, string | undefined>)
+    .refreshToken;
+
+  if (!refreshToken) {
     next(new HttpError(401, 'Unauthorized'));
     return;
   }
@@ -44,7 +45,7 @@ export const authenticateJWTCookie: RequestHandler = async (
   try {
     const authService = new AuthService();
 
-    const { sub, jti } = await authService.getPayload(accessToken);
+    const { sub, jti } = await authService.getPayload(refreshToken);
     if (!sub || !jti) {
       next(new HttpError(401, 'Unauthorized'));
       return;
