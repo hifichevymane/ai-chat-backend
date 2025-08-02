@@ -26,7 +26,7 @@ export const signUp = async (
   });
 
   const authService = new AuthService();
-  const token = await authService.generateJWT(user);
+  const accessToken = await authService.generateJWT(user);
   const { token: refreshToken, tokenExpirationTimeInMs } =
     await authService.generateRefreshJWT(user);
 
@@ -37,5 +37,5 @@ export const signUp = async (
     sameSite: 'strict',
     maxAge: tokenExpirationTimeInMs
   });
-  res.status(201).json({ token });
+  res.status(201).json({ accessToken });
 };
