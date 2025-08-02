@@ -22,6 +22,15 @@ if (!process.env.JWT_EXPIRES_IN) {
 if (!process.env.JWT_REFRESH_EXPIRES_IN) {
   throw new Error('JWT_REFRESH_EXPIRES_IN is not set');
 }
+
+if (!process.env.JWT_ISSUER) {
+  throw new Error('JWT_ISSUER is not set');
+}
+
+if (!process.env.JWT_AUDIENCE) {
+  throw new Error('JWT_AUDIENCE is not set');
+}
+
 const ENCODED_JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
 export class AuthService {
@@ -47,9 +56,13 @@ export class AuthService {
   public async generateJWT(payload: UserDTO): Promise<string> {
     const expiresIn = process.env.JWT_EXPIRES_IN;
     const { id, email, firstName, lastName } = payload;
-    const token = await new SignJWT({ sub: id, email, firstName, lastName })
+    const token = await new SignJWT({ email, firstName, lastName })
+      .setSubject(id)
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+      .setIssuer(process.env.JWT_ISSUER)
+      .setAudience(process.env.JWT_AUDIENCE)
       .setIssuedAt()
+      .setNotBefore(new Date())
       .setExpirationTime(expiresIn)
       .setJti(crypto.randomUUID())
       .sign(ENCODED_JWT_SECRET);
@@ -63,9 +76,13 @@ export class AuthService {
   }> {
     const expiresIn = process.env.JWT_REFRESH_EXPIRES_IN;
     const { id, email, firstName, lastName } = payload;
-    const token = await new SignJWT({ sub: id, email, firstName, lastName })
+    const token = await new SignJWT({ email, firstName, lastName })
+      .setSubject(id)
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+      .setIssuer(process.env.JWT_ISSUER)
+      .setAudience(process.env.JWT_AUDIENCE)
       .setIssuedAt()
+      .setNotBefore(new Date())
       .setExpirationTime(expiresIn)
       .setJti(crypto.randomUUID())
       .sign(ENCODED_JWT_SECRET);
