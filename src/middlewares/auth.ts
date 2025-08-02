@@ -2,6 +2,8 @@ import passport from 'passport';
 import type { RequestHandler, Request, Response, NextFunction } from 'express';
 import { HttpError } from '../controllers/http-error';
 import type { User } from '../types';
+import { AuthService, UserService } from '../services';
+import { getRefreshTokenCookie, clearRefreshTokenCookie } from '../utils';
 
 export const authenticateJWT: RequestHandler = (
   req: Request,
@@ -26,4 +28,49 @@ export const authenticateJWT: RequestHandler = (
       next();
     }
   )(req, res, next);
+};
+
+export const authenticateJWTCookie: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const refreshToken = getRefreshTokenCookie(req);
+
+  if (!refreshToken) {
+    next(new HttpError(401, 'Unauthorized'));
+    return;
+  }
+
+  try {
+    const authService = new AuthService();
+
+    const { sub, jti } = await authService.getPayload(refreshToken);
+    if (!sub || !jti) {
+      next(new HttpError(401, 'Unauthorized'));
+      clearRefreshTokenCookie(res);
+      return;
+    }
+
+    const isBlacklisted = await authService.isTokenBlacklisted(sub, jti);
+    if (isBlacklisted) {
+      next(new HttpError(401, 'Unauthorized'));
+      clearRefreshTokenCookie(res);
+      return;
+    }
+
+    const userService = new UserService();
+    const user = await userService.findUserById(sub);
+    if (!user) {
+      next(new HttpError(401, 'Unauthorized'));
+      clearRefreshTokenCookie(res);
+      return;
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    clearRefreshTokenCookie(res);
+    next(error);
+  }
 };
