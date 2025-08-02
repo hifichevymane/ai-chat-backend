@@ -1,12 +1,13 @@
 import type { Request, Response } from 'express';
 import { AuthService } from '../../services';
 import { HttpError } from '../http-error';
+import { getAccessToken } from '../../utils';
 
 export const invalidateAccessToken = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const accessToken = req.headers.authorization?.split(' ')[1];
+  const accessToken = getAccessToken(req);
   if (!accessToken) {
     throw new HttpError(403, 'Forbidden');
   }

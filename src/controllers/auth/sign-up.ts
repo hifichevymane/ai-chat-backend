@@ -2,13 +2,18 @@ import type { Request, Response } from 'express';
 import { UserService, AuthService } from '../../services';
 import type { SignUpRequestBody } from './schemas';
 import { HttpError } from '../http-error';
-import { getRefreshTokenCookie, setRefreshTokenCookie } from '../../utils';
+import {
+  getRefreshTokenCookie,
+  setRefreshTokenCookie,
+  getAccessToken
+} from '../../utils';
 
 export const signUp = async (
   req: Request<unknown, unknown, SignUpRequestBody>,
   res: Response
 ): Promise<void> => {
-  const existingAccessToken = req.headers.authorization?.split(' ')[1];
+  // @ts-expect-error - TODO: fix this
+  const existingAccessToken = getAccessToken(req);
   // @ts-expect-error - TODO: fix this
   const existingRefreshToken = getRefreshTokenCookie(req);
 
