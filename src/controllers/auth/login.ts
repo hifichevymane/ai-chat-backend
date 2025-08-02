@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { AuthService } from '../../services';
 import { HttpError } from '../http-error';
 import type { LoginRequestBody } from './schemas';
+import { getRefreshTokenCookie, setRefreshTokenCookie } from '../../utils';
 
 export const login = async (
   req: Request<unknown, unknown, LoginRequestBody>,
@@ -9,9 +10,8 @@ export const login = async (
 ): Promise<void> => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
-    const existingRefreshToken = (
-      req.signedCookies as Record<string, string | undefined>
-    ).refreshToken;
+    // @ts-expect-error - TODO: fix this
+    const existingRefreshToken = getRefreshTokenCookie(req);
 
     if (token || existingRefreshToken) {
       throw new HttpError(403, 'Already logged in');
@@ -26,14 +26,7 @@ export const login = async (
     const { token: refreshToken, tokenExpirationTimeInMs } =
       await authService.generateRefreshJWT(user);
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      signed: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: tokenExpirationTimeInMs
-    });
-
+    setRefreshTokenCookie(res, refreshToken, tokenExpirationTimeInMs);
     res.status(200).json({ accessToken });
   } catch (err: unknown) {
     if (err instanceof Error && err.message === 'Invalid email or password') {

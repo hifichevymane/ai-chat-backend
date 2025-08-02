@@ -1,11 +1,11 @@
 import type { Request, Response } from 'express';
 import { AuthService } from '../../services';
 import { HttpError } from '../http-error';
+import { getRefreshTokenCookie, clearRefreshTokenCookie } from '../../utils';
 
 export const logout = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
-  const refreshToken = (req.signedCookies as Record<string, string | undefined>)
-    .refreshToken;
+  const refreshToken = getRefreshTokenCookie(req);
 
   if (!token || !refreshToken) {
     throw new HttpError(401, 'Unauthorized');
@@ -15,11 +15,6 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   await authService.blacklistJWT(token);
   await authService.blacklistJWT(refreshToken);
 
-  res.clearCookie('refreshToken', {
-    httpOnly: true,
-    signed: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
-  });
+  clearRefreshTokenCookie(res);
   res.status(204).end();
 };

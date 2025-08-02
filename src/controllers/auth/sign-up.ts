@@ -2,15 +2,15 @@ import type { Request, Response } from 'express';
 import { UserService, AuthService } from '../../services';
 import type { SignUpRequestBody } from './schemas';
 import { HttpError } from '../http-error';
+import { getRefreshTokenCookie, setRefreshTokenCookie } from '../../utils';
 
 export const signUp = async (
   req: Request<unknown, unknown, SignUpRequestBody>,
   res: Response
 ): Promise<void> => {
   const existingAccessToken = req.headers.authorization?.split(' ')[1];
-  const existingRefreshToken = (
-    req.signedCookies as Record<string, string | undefined>
-  ).refreshToken;
+  // @ts-expect-error - TODO: fix this
+  const existingRefreshToken = getRefreshTokenCookie(req);
 
   if (existingAccessToken || existingRefreshToken) {
     throw new HttpError(403, 'Already logged in');
@@ -30,12 +30,6 @@ export const signUp = async (
   const { token: refreshToken, tokenExpirationTimeInMs } =
     await authService.generateRefreshJWT(user);
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    signed: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: tokenExpirationTimeInMs
-  });
+  setRefreshTokenCookie(res, refreshToken, tokenExpirationTimeInMs);
   res.status(201).json({ accessToken });
 };
