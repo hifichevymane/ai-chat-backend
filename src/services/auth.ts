@@ -46,14 +46,11 @@ export class AuthService {
 
   public async generateJWT(payload: UserDTO): Promise<string> {
     const expiresIn = process.env.JWT_EXPIRES_IN;
-    const expSeconds = this.generateExpirationTimeInSeconds(expiresIn);
-    const now = Math.floor(Date.now() / 1000);
-
     const { id, email, firstName, lastName } = payload;
     const token = await new SignJWT({ sub: id, email, firstName, lastName })
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
-      .setIssuedAt(now)
-      .setExpirationTime(now + expSeconds)
+      .setIssuedAt()
+      .setExpirationTime(expiresIn)
       .setJti(crypto.randomUUID())
       .sign(ENCODED_JWT_SECRET);
 
@@ -65,19 +62,15 @@ export class AuthService {
     tokenExpirationTimeInMs: number;
   }> {
     const expiresIn = process.env.JWT_REFRESH_EXPIRES_IN;
-    const expSeconds = this.generateExpirationTimeInSeconds(expiresIn);
-
     const { id, email, firstName, lastName } = payload;
-
-    const now = Math.floor(Date.now() / 1000);
-    const tokenExpirationTime = now + expSeconds;
     const token = await new SignJWT({ sub: id, email, firstName, lastName })
       .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
-      .setIssuedAt(now)
-      .setExpirationTime(tokenExpirationTime)
+      .setIssuedAt()
+      .setExpirationTime(expiresIn)
       .setJti(crypto.randomUUID())
       .sign(ENCODED_JWT_SECRET);
 
+    const tokenExpirationTime = this.generateExpirationTimeInSeconds(expiresIn);
     return {
       token,
       tokenExpirationTimeInMs: tokenExpirationTime * 1000
