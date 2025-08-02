@@ -23,7 +23,7 @@ export const login = async (
     const user = await authService.login(email, password);
 
     const accessToken = await authService.generateJWT(user);
-    const { token: refreshToken, tokenExpirationTime } =
+    const { token: refreshToken, tokenExpirationTimeInMs } =
       await authService.generateRefreshJWT(user);
 
     res.cookie('refreshToken', refreshToken, {
@@ -31,7 +31,7 @@ export const login = async (
       signed: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: tokenExpirationTime * 1000
+      maxAge: tokenExpirationTimeInMs
     });
 
     res.status(200).json({ accessToken });

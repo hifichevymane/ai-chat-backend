@@ -62,7 +62,7 @@ export class AuthService {
 
   public async generateRefreshJWT(payload: UserDTO): Promise<{
     token: string;
-    tokenExpirationTime: number;
+    tokenExpirationTimeInMs: number;
   }> {
     const expiresIn = process.env.JWT_REFRESH_EXPIRES_IN;
     const expSeconds = this.generateExpirationTimeInSeconds(expiresIn);
@@ -78,7 +78,10 @@ export class AuthService {
       .setJti(crypto.randomUUID())
       .sign(ENCODED_JWT_SECRET);
 
-    return { token, tokenExpirationTime };
+    return {
+      token,
+      tokenExpirationTimeInMs: tokenExpirationTime * 1000
+    };
   }
 
   public async verifyJWT(token: string): Promise<boolean> {
