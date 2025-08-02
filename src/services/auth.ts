@@ -11,6 +11,19 @@ import type { User } from '../types';
 
 type UserDTO = Pick<User, 'id' | 'email' | 'firstName' | 'lastName'>;
 
+if (!process.env.JWT_SECRET) {
+  throw new Error('JWT_SECRET is not set');
+}
+
+if (!process.env.JWT_EXPIRES_IN) {
+  throw new Error('JWT_EXPIRES_IN is not set');
+}
+
+if (!process.env.JWT_REFRESH_EXPIRES_IN) {
+  throw new Error('JWT_REFRESH_EXPIRES_IN is not set');
+}
+const ENCODED_JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
+
 export class AuthService {
   public async login(email: string, password: string): Promise<User> {
     const error = new Error('Invalid email or password');
@@ -32,11 +45,7 @@ export class AuthService {
   }
 
   public async generateJWT(payload: UserDTO): Promise<string> {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) throw new Error('JWT secret not set');
-    const secretKey = new TextEncoder().encode(secret);
-
-    const expiresIn = process.env.JWT_EXPIRES_IN || '24h';
+    const expiresIn = process.env.JWT_EXPIRES_IN;
     const expSeconds = this.generateExpirationTimeInSeconds(expiresIn);
     const now = Math.floor(Date.now() / 1000);
 
@@ -46,7 +55,7 @@ export class AuthService {
       .setIssuedAt(now)
       .setExpirationTime(now + expSeconds)
       .setJti(crypto.randomUUID())
-      .sign(secretKey);
+      .sign(ENCODED_JWT_SECRET);
 
     return token;
   }
@@ -55,13 +64,6 @@ export class AuthService {
     token: string;
     tokenExpirationTime: number;
   }> {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) throw new Error('JWT secret not set');
-    if (!process.env.JWT_REFRESH_EXPIRES_IN) {
-      throw new Error('JWT_REFRESH_EXPIRES_IN is not set');
-    }
-
-    const secretKey = new TextEncoder().encode(secret);
     const expiresIn = process.env.JWT_REFRESH_EXPIRES_IN;
     const expSeconds = this.generateExpirationTimeInSeconds(expiresIn);
 
@@ -74,18 +76,14 @@ export class AuthService {
       .setIssuedAt(now)
       .setExpirationTime(tokenExpirationTime)
       .setJti(crypto.randomUUID())
-      .sign(secretKey);
+      .sign(ENCODED_JWT_SECRET);
 
     return { token, tokenExpirationTime };
   }
 
   public async verifyJWT(token: string): Promise<boolean> {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) throw new Error('JWT secret not set');
-
-    const secretKey = new TextEncoder().encode(secret);
     try {
-      const { payload } = await jwtVerify<UserDTO>(token, secretKey);
+      const { payload } = await jwtVerify<UserDTO>(token, ENCODED_JWT_SECRET);
       const userId = typeof payload.sub === 'string' ? payload.sub : undefined;
       if (!userId) return false;
       const user = await prisma.user.findFirst({ where: { id: userId } });
@@ -96,11 +94,7 @@ export class AuthService {
   }
 
   public async getPayload(token: string): Promise<UserDTO & JWTPayload> {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) throw new Error('JWT secret not set');
-
-    const secretKey = new TextEncoder().encode(secret);
-    const { payload } = await jwtVerify<UserDTO>(token, secretKey);
+    const { payload } = await jwtVerify<UserDTO>(token, ENCODED_JWT_SECRET);
     return payload;
   }
 
@@ -145,11 +139,7 @@ export class AuthService {
   }
 
   public async blacklistJWT(token: string): Promise<boolean> {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) throw new Error('JWT secret not set');
-
-    const secretKey = new TextEncoder().encode(secret);
-    const { payload } = await jwtVerify(token, secretKey);
+    const { payload } = await jwtVerify<UserDTO>(token, ENCODED_JWT_SECRET);
     const userId = typeof payload.sub === 'string' ? payload.sub : undefined;
 
     if (!userId) return false;
