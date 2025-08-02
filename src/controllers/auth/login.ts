@@ -8,9 +8,18 @@ export const login = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { email, password } = req.body;
+    const token = req.headers.authorization?.split(' ')[1];
+    const existingRefreshToken = (
+      req.signedCookies as Record<string, string | undefined>
+    ).refreshToken;
+
+    if (token || existingRefreshToken) {
+      throw new HttpError(403, 'Already logged in');
+    }
 
     const authService = new AuthService();
+
+    const { email, password } = req.body;
     const user = await authService.login(email, password);
 
     const accessToken = await authService.generateJWT(user);
@@ -24,6 +33,7 @@ export const login = async (
       sameSite: 'strict',
       maxAge: tokenExpirationTime * 1000
     });
+
     res.status(200).json({ accessToken });
   } catch (err: unknown) {
     if (err instanceof Error && err.message === 'Invalid email or password') {
