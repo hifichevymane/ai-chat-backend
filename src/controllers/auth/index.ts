@@ -4,3 +4,4 @@ export * from './logout';
 export * from './sign-up';
 export * from './me';
 export * from './refresh';
+export * from './invalidate-access-token';

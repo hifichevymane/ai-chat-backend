@@ -5,7 +5,8 @@ import {
   logout,
   signUp,
   me,
-  refresh
+  refresh,
+  invalidateAccessToken
 } from '../../controllers/auth';
 
 import {
@@ -27,6 +28,7 @@ router.post('/logout', logout);
 router.post('/sign-up', validateBody(signUpBodySchema), signUp);
 router.post('/verify', validateBody(verifyBodySchema), verify);
 router.post('/refresh', authenticateJWTCookie, refresh);
+router.post('/invalidate-access-token', invalidateAccessToken);
 router.get('/me', authenticateJWT, me);
 
 export default router;
