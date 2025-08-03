@@ -47,23 +47,23 @@ export const authenticateJWTCookie: RequestHandler = async (
 
     const { sub, jti } = await authService.getPayload(refreshToken);
     if (!sub || !jti) {
-      next(new HttpError(401, 'Unauthorized'));
       clearRefreshTokenCookie(res);
+      next(new HttpError(401, 'Unauthorized'));
       return;
     }
 
     const isBlacklisted = await authService.isTokenBlacklisted(sub, jti);
     if (isBlacklisted) {
-      next(new HttpError(401, 'Unauthorized'));
       clearRefreshTokenCookie(res);
+      next(new HttpError(401, 'Unauthorized'));
       return;
     }
 
     const userService = new UserService();
     const user = await userService.findUserById(sub);
     if (!user) {
-      next(new HttpError(401, 'Unauthorized'));
       clearRefreshTokenCookie(res);
+      next(new HttpError(401, 'Unauthorized'));
       return;
     }
 
