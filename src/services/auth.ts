@@ -54,7 +54,6 @@ export class AuthService {
   }
 
   public async generateJWT(payload: UserDTO): Promise<string> {
-    const expiresIn = process.env.JWT_EXPIRES_IN;
     const { id, email, firstName, lastName } = payload;
     const token = await new SignJWT({ email, firstName, lastName })
       .setSubject(id)
@@ -63,7 +62,7 @@ export class AuthService {
       .setAudience(process.env.JWT_AUDIENCE)
       .setIssuedAt()
       .setNotBefore(new Date())
-      .setExpirationTime(expiresIn)
+      .setExpirationTime(process.env.JWT_EXPIRES_IN)
       .setJti(crypto.randomUUID())
       .sign(ENCODED_JWT_SECRET);
 
@@ -96,7 +95,7 @@ export class AuthService {
 
   public async verifyJWT(token: string): Promise<boolean> {
     try {
-      const { payload } = await jwtVerify<UserDTO>(token, ENCODED_JWT_SECRET);
+      const payload = await this.getPayload(token);
       const userId = typeof payload.sub === 'string' ? payload.sub : undefined;
       if (!userId) return false;
       const user = await prisma.user.findFirst({ where: { id: userId } });
@@ -107,7 +106,11 @@ export class AuthService {
   }
 
   public async getPayload(token: string): Promise<UserDTO & JWTPayload> {
-    const { payload } = await jwtVerify<UserDTO>(token, ENCODED_JWT_SECRET);
+    const { payload } = await jwtVerify<UserDTO>(token, ENCODED_JWT_SECRET, {
+      algorithms: ['HS256'],
+      issuer: process.env.JWT_ISSUER,
+      audience: process.env.JWT_AUDIENCE
+    });
     return payload;
   }
 
@@ -152,7 +155,7 @@ export class AuthService {
   }
 
   public async blacklistJWT(token: string): Promise<boolean> {
-    const { payload } = await jwtVerify<UserDTO>(token, ENCODED_JWT_SECRET);
+    const payload = await this.getPayload(token);
     const userId = typeof payload.sub === 'string' ? payload.sub : undefined;
 
     if (!userId) return false;

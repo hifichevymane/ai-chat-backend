@@ -6,7 +6,7 @@ import passport from 'passport';
 import cookieParser from 'cookie-parser';
 
 import { AuthService } from './services';
-import { errorHandler } from './middlewares';
+import { errorHandler, notFoundHandler } from './middlewares';
 import routes from './routes';
 
 const app = express();
@@ -36,5 +36,6 @@ app.use(passport.initialize());
 app.use('/api', routes);
 
 app.use(errorHandler);
+app.use(notFoundHandler);
 
 export default app;
