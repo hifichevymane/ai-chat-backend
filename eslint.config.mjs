@@ -20,11 +20,11 @@ export default tseslint.config(
     '*.config.cjs',
     '*.config.ts',
     'dist',
-    'node_modules',
+    'node_modules/*',
     '.eslintrc.*',
     '.prettierrc.*',
     'coverage',
-    'src/database/prisma'
+    'prisma'
   ]),
   {
     languageOptions: {
