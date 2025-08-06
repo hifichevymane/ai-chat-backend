@@ -26,7 +26,6 @@ jobs:
 
       - name: Lint
         run: pnpm lint
-        working-directory: ./ai-chat-backend
 
       - name: Run tests
         run: pnpm test:coverage
