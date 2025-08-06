@@ -4,11 +4,13 @@ dotenv.config();
 import { Server } from 'http';
 import app from './app';
 import { loadLLM, unloadLLM } from './llm-lifecycle';
+import { startCronJobs, stopCronJobs } from './cron';
 
 async function main(): Promise<void> {
   await loadLLM();
   const server = setupServer();
   addShutdownHandlers(server);
+  startCronJobs();
 }
 
 main().catch((err: unknown) => {
@@ -26,6 +28,7 @@ function setupServer(): Server {
 
 function addShutdownHandlers(server: Server): void {
   const handler = (): void => {
+    void stopCronJobs();
     server.close(() => {
       console.debug('HTTP server is closed...');
     });

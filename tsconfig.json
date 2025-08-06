@@ -13,7 +13,7 @@
     "strict": true,
     "skipLibCheck": true,
     "strictPropertyInitialization": false,
-    "typeRoots": ["./node_modules/@types", "./types"],
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "types": ["node"],
     "moduleDetection": "force",
     // Allow JS files to be imported from TS and vice versa
