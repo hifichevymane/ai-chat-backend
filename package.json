@@ -14,7 +14,6 @@
     "lint:fix": "eslint --fix src/**/*.ts",
     "prisma-studio": "prisma studio",
     "format": "prettier --write .",
-    "db:client:generate": "prisma generate",
     "db:migrate:dev": "prisma migrate dev && prisma generate",
     "db:migrate:prod": "pnpm dlx prisma migrate deploy && pnpm dlx prisma generate",
     "db:seed": "tsx src/scripts/seed.ts",
